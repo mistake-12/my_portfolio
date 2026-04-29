@@ -21,6 +21,7 @@ const config: Config = {
         sans: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
         mono: ["var(--font-space-mono)", "monospace"],
         display: ["Abril Fatface", "Georgia", "serif"],
+        hero: ["var(--font-syne)", "system-ui", "sans-serif"],
       },
       letterSpacing: {
         "ultra-wide": "0.3em",
@@ -32,6 +33,7 @@ const config: Config = {
         "fade-up-d1": "fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards",
         "fade-up-d2": "fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards",
         "fade-in": "fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "scroll-line": "scrollLine 2s cubic-bezier(0.8, 0, 0.2, 1) infinite",
       },
       keyframes: {
         fadeUp: {
@@ -41,6 +43,11 @@ const config: Config = {
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
+        },
+        scrollLine: {
+          "0%": { transform: "translateY(-100%)" },
+          "50%": { transform: "translateY(200%)" },
+          "100%": { transform: "translateY(200%)" },
         },
       },
       backdropBlur: {

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Space_Mono } from "next/font/google";
+import { Space_Grotesk, Space_Mono, Syne } from "next/font/google";
 import "./globals.css";
-import { ScrollProvider } from "@/context/ScrollContext";
 import NoiseTexture from "@/components/NoiseTexture";
 
 const spaceGrotesk = Space_Grotesk({
@@ -15,6 +14,13 @@ const spaceMono = Space_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-space-mono",
+  display: "swap",
+});
+
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["800"],
+  variable: "--font-syne",
   display: "swap",
 });
 
@@ -33,10 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh" className={`${spaceGrotesk.variable} ${spaceMono.variable}`}>
+    <html lang="zh" className={`${spaceGrotesk.variable} ${spaceMono.variable} ${syne.variable}`}>
       <body className="font-sans antialiased">
         <NoiseTexture />
-        <ScrollProvider>{children}</ScrollProvider>
+        {children}
       </body>
     </html>
   );
