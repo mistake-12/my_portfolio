@@ -13,7 +13,7 @@ export default function DisciplineContent() {
   return (
     <section className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden px-4">
       {/* 无形宽幅骨架：透明无边距，拉开至全宽 */}
-      <div className="flex w-[90vw] max-w-7xl flex-col mx-auto">
+      <div className="flex w-[90vw] max-w-7xl flex-col mx-auto -translate-y-8 md:-translate-y-12">
         {/* Header */}
         <div className="mb-16 md:mb-24">
           <span className="drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)] text-[11px] uppercase tracking-widest text-white/70">

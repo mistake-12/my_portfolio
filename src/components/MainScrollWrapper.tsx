@@ -119,7 +119,7 @@ export default function MainScrollWrapper() {
         <DisciplineContent />
       </div>
 
-      {/* 滚动指示器：固定在视口底部，Stage 1/2 时始终可见，Stage 2 消失时随其一同消散 */}
+      {/* 滚动指示器：固定在视口底部正中央，Stage 1/2 时始终可见，Stage 2 消失时随其一同消散 */}
       <ScrollIndicator />
     </section>
   );

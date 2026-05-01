@@ -79,7 +79,7 @@ export default function AboutContent() {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-6xl">
+    <div className="mx-auto w-full max-w-6xl -translate-y-8 md:-translate-y-12">
       <div className="grid grid-cols-12 items-center gap-8 md:gap-12">
         {/* Avatar */}
         <div className="col-span-12 flex justify-center md:col-span-5">
