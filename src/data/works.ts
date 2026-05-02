@@ -7,6 +7,9 @@ export interface Work {
   image: string;
   slug: string;
   featured: boolean;
+  // Phase 1+ 扩展
+  description?: string;
+  tags?: string[];
 }
 
 export const works: Work[] = [
@@ -19,6 +22,8 @@ export const works: Work[] = [
     image: "",
     slug: "modular-speaker",
     featured: true,
+    description: "A modular speaker system designed for seamless integration into modern living spaces.",
+    tags: ["Product", "Industrial"],
   },
   {
     id: "w2",
@@ -29,6 +34,8 @@ export const works: Work[] = [
     image: "",
     slug: "dashboard-ui",
     featured: true,
+    description: "A comprehensive design system for data-driven applications with real-time analytics.",
+    tags: ["Software", "UI"],
   },
   {
     id: "w3",
@@ -39,6 +46,8 @@ export const works: Work[] = [
     image: "",
     slug: "ecommerce-experience",
     featured: true,
+    description: "Immersive shopping experience with seamless transitions and micro-interactions.",
+    tags: ["Interaction", "Digital"],
   },
   {
     id: "w4",
@@ -49,5 +58,7 @@ export const works: Work[] = [
     image: "",
     slug: "brand-identity",
     featured: true,
+    description: "Complete brand identity for a tech startup, from logo to design system.",
+    tags: ["Brand", "Visual"],
   },
 ];
