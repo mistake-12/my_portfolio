@@ -8,65 +8,74 @@ import WorkMeta from "./WorkMeta";
 interface WorkCanvasProps {
   work: Work;
   index: number;
+  className?: string;
 }
 
-// 渐变背景调色板：为 Phase 1 占位背景提供视觉区分
-const CANVAS_GRADIENTS = [
-  "from-zinc-900/40 via-zinc-950/60 to-black",
-  "from-stone-900/30 via-neutral-950/60 to-black",
-  "from-zinc-800/30 via-stone-950/60 to-black",
-  "from-neutral-900/40 via-zinc-950/60 to-black",
-];
+// 将 layout 字符串映射为 Tailwind align-items
+const alignYMap = {
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+} as const;
 
-export default function WorkCanvas({ work, index }: WorkCanvasProps) {
-  const gradient = CANVAS_GRADIENTS[index % CANVAS_GRADIENTS.length];
+// 将 layout 字符串映射为 justify-content（图文排列）
+const justifyMap = {
+  "img-left": "justify-start",
+  "img-right": "justify-end",
+  stacked: "justify-center",
+} as const;
+
+export default function WorkCanvas({ work, index, className = "" }: WorkCanvasProps) {
+  const alignItems = alignYMap[work.alignY];
+  const justifyContent = justifyMap[work.layout];
+
+  // stacked 模式：垂直单列；其余模式：水平双列
+  const isStacked = work.layout === "stacked";
 
   return (
     <div
-      className="relative flex h-full w-screen flex-shrink-0 overflow-hidden"
-      style={{ height: "100vh", width: "100vw" }}
+      id={`work-${work.id}`}
+      className={`relative flex h-full flex-shrink-0 overflow-hidden ${className}`}
+      style={{ height: "100vh" }}
     >
-      {/* 背景渐变层 */}
+      {/* 内容安全区：py-24 防贴边，px-12/32 提供呼吸空间 */}
       <div
-        className={`absolute inset-0 bg-gradient-to-br ${gradient}`}
-      />
-
-      {/* 噪点纹理叠加 */}
-      <div className="absolute inset-0 opacity-30">
+        className={`relative z-10 flex h-full w-full ${alignItems} ${justifyContent} px-8 md:px-24 lg:px-32 py-24`}
+      >
+        {/* 内部布局：stacked 时单列 grid-1，否则双列 grid-2 */}
         <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            opacity: 0.04,
-          }}
-        />
-      </div>
-
-      {/* 内容安全区：max-w-7xl 防止超宽屏排版失控 */}
-      <div className="relative z-10 flex h-full w-full max-w-7xl mx-auto px-8 md:px-16 items-center">
-        <div className="grid w-full grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-
-          {/* 左侧：作品主视觉 */}
-          <div className="order-2 lg:order-1">
-            <WorkMedia work={work} index={index} />
-          </div>
-
-          {/* 右侧：作品元信息 */}
-          <div className="order-1 lg:order-2">
-            <WorkMeta work={work} index={index} />
-          </div>
-
+          className={`w-full ${isStacked ? "max-w-lg" : "max-w-5xl"} ${
+            isStacked
+              ? "grid grid-cols-1 gap-8"
+              : "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+          }`}
+        >
+          {/* 根据 layout 决定图文顺序 */}
+          {work.layout === "img-left" || work.layout === "stacked" ? (
+            <>
+              {/* 图片在前 */}
+              <div>
+                <WorkMedia work={work} index={index} />
+              </div>
+              {/* 文字在后 */}
+              <div>
+                <WorkMeta work={work} index={index} />
+              </div>
+            </>
+          ) : (
+            <>
+              {/* 文字在前 */}
+              <div>
+                <WorkMeta work={work} index={index} />
+              </div>
+              {/* 图片在后 */}
+              <div>
+                <WorkMedia work={work} index={index} />
+              </div>
+            </>
+          )}
         </div>
       </div>
-
-      {/* 画布边界微妙的暗角 */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 80% at 50% 50%, transparent 30%, rgba(0,0,0,0.3) 100%)",
-        }}
-      />
     </div>
   );
 }

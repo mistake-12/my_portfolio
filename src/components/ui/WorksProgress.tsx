@@ -75,20 +75,20 @@ export default function WorksProgress({ worksLength }: WorksProgressProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed bottom-8 right-8 z-50 pointer-events-none opacity-0"
+      className="fixed bottom-8 right-8 z-50 pointer-events-none opacity-0 mix-blend-difference"
     >
       <div className="flex flex-col items-end gap-1">
         {/* 进度数字 */}
         <span
           ref={counterRef}
-          className="font-mono text-xs tracking-widest text-white/40 tabular-nums"
+          className="font-mono text-xs tracking-widest text-white tabular-nums"
         >
           {String(progress).padStart(2, "0")}%
         </span>
         {/* 进度条 */}
-        <div className="h-px w-16 overflow-hidden rounded-full bg-white/10">
+        <div className="h-px w-16 overflow-hidden rounded-full bg-white/30">
           <div
-            className="h-full rounded-full bg-white/40 transition-transform duration-100"
+            className="h-full rounded-full bg-white transition-transform duration-100"
             style={{
               width: `${progress}%`,
               transform: "scaleX(1)",

@@ -10,10 +10,10 @@ interface WorkMediaProps {
 
 // 为无图片的占位状态生成独特的视觉形态
 const SHAPE_CONFIGS = [
-  { shape: "circle", color: "from-white/5 to-white/0", rotate: "rotate-12" },
-  { shape: "square", color: "from-white/3 to-white/0", rotate: "-rotate-6" },
-  { shape: "circle", color: "from-white/4 to-white/0", rotate: "rotate-45" },
-  { shape: "square", color: "from-white/3 to-white/0", rotate: "rotate-3" },
+  { shape: "circle", color: "from-zinc-100 to-white", rotate: "rotate-12" },
+  { shape: "square", color: "from-zinc-100 to-white", rotate: "-rotate-6" },
+  { shape: "circle", color: "from-zinc-50 to-white", rotate: "rotate-45" },
+  { shape: "square", color: "from-zinc-100 to-white", rotate: "rotate-3" },
 ];
 
 export default function WorkMedia({ work, index }: WorkMediaProps) {
@@ -42,15 +42,15 @@ export default function WorkMedia({ work, index }: WorkMediaProps) {
         className={`absolute inset-0 flex items-center justify-center ${shapeConfig.rotate}`}
       >
         {shapeConfig.shape === "circle" ? (
-          <div className="h-48 w-48 rounded-full border border-white/10" />
+          <div className="h-48 w-48 rounded-full border border-black/10" />
         ) : (
-          <div className="h-40 w-40 rotate-45 border border-white/10" />
+          <div className="h-40 w-40 rotate-45 border border-black/10" />
         )}
       </div>
 
       {/* 装饰性光晕 */}
-      <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/5 blur-xl" />
-      <div className="absolute -left-8 -bottom-8 h-24 w-24 rounded-full bg-white/5 blur-xl" />
+      <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-black/5 blur-xl" />
+      <div className="absolute -left-8 -bottom-8 h-24 w-24 rounded-full bg-black/5 blur-xl" />
     </div>
   );
 }
