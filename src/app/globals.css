@@ -11,6 +11,10 @@
 }
 
 :root {
+  --font-space-grotesk: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-space-mono: 'Space Mono', 'Courier New', monospace;
+  --font-syne: 'Syne', system-ui, -apple-system, sans-serif;
+
   --color-bg: #030303;
   --color-surface: #050505;
   --color-card: #111111;
@@ -20,7 +24,9 @@
   --color-text-primary: #ffffff;
   --color-text-secondary: #a1a1aa;
   --color-text-muted: #52525b;
-  --color-accent: #ffffff;
+  --color-accent: #2D2D5E;
+  --color-accent-light: #3D3D7E;
+  --color-warm-bg: #F5F4F0;
   --color-overlay: rgba(255, 255, 255, 0.05);
   --color-tag-bg: rgba(255, 255, 255, 0.06);
   --color-success: #22c55e;
@@ -103,7 +109,7 @@ body {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 300ms !important;  /* 允许基本过渡，但不使用花哨动效 */
   }
 }
 

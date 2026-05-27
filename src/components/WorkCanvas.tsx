@@ -25,17 +25,29 @@ const justifyMap = {
   stacked: "justify-center",
 } as const;
 
+// 将 width 字段映射为内部内容的最大宽度
+const widthMap: Record<string, string> = {
+  "w-[40vw]": "max-w-lg",
+  "w-[45vw]": "max-w-xl",
+  "w-[55vw]": "max-w-3xl",
+  "w-[60vw]": "max-w-3xl",
+  "w-[70vw]": "max-w-5xl",
+  "w-[75vw]": "max-w-5xl",
+  "w-[80vw]": "max-w-6xl",
+  "w-[85vw]": "max-w-6xl",
+};
+
 export default function WorkCanvas({ work, index, className = "" }: WorkCanvasProps) {
   const alignItems = alignYMap[work.alignY];
   const justifyContent = justifyMap[work.layout];
+  const maxWidth = widthMap[work.width] || "max-w-5xl";
 
-  // stacked 模式：垂直单列；其余模式：水平双列
   const isStacked = work.layout === "stacked";
 
   return (
     <div
       id={`work-${work.id}`}
-      className={`relative flex h-full flex-shrink-0 overflow-hidden ${className}`}
+      className={`relative z-[3] flex h-full flex-shrink-0 overflow-hidden ${className}`}
       style={{ height: "100vh" }}
     >
       {/* 内容安全区：py-24 防贴边，px-12/32 提供呼吸空间 */}
@@ -44,7 +56,7 @@ export default function WorkCanvas({ work, index, className = "" }: WorkCanvasPr
       >
         {/* 内部布局：stacked 时单列 grid-1，否则双列 grid-2 */}
         <div
-          className={`w-full ${isStacked ? "max-w-lg" : "max-w-5xl"} ${
+          className={`w-full ${maxWidth} ${
             isStacked
               ? "grid grid-cols-1 gap-8"
               : "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"

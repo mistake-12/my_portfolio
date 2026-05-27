@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 90">
+  <defs>
+    <filter id="cloud-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="12" stdDeviation="25" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+  <g id="cloud">
+    <rect x="0" y="40" width="150" height="50" rx="25" ry="25" fill="#FFFFFF" />
+    <circle cx="60" cy="35" r="35" fill="#FFFFFF" />
+    <circle cx="102" cy="42" r="27" fill="#FFFFFF" />
+  </g>
+</svg>

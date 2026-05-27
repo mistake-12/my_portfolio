@@ -1,28 +1,6 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Space_Mono, Syne } from "next/font/google";
 import "./globals.css";
 import NoiseTexture from "@/components/NoiseTexture";
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-});
-
-const spaceMono = Space_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-space-mono",
-  display: "swap",
-});
-
-const syne = Syne({
-  subsets: ["latin"],
-  weight: ["800"],
-  variable: "--font-syne",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "JONY MA. — Creative Designer",
@@ -39,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh" className={`${spaceGrotesk.variable} ${spaceMono.variable} ${syne.variable}`}>
+    <html lang="zh">
       <body className="font-sans antialiased">
         <NoiseTexture />
         {children}

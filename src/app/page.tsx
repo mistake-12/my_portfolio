@@ -12,6 +12,7 @@ import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import WorkCanvas from "@/components/WorkCanvas";
 import WorksProgress from "@/components/ui/WorksProgress";
 import FlyingMascot from "@/components/FlyingMascot";
+import Clouds from "@/components/Clouds";
 import { works } from "@/data/works";
 import { extendPath } from "@/lib/extendPath";
 
@@ -58,6 +59,17 @@ export default function Home() {
         "#flying-mascot"
       ) as HTMLElement | null;
 
+      const clouds = stage4Wrapper?.querySelector("#stage4-clouds") as HTMLElement | null;
+
+      // 收集所有 WorkCanvas 的 DOM 引用 + 其内部需要触发入场动画的元素
+      const workEntries = works.map((w) => {
+        const el = document.querySelector(`#work-${w.id}`) as HTMLElement | null;
+        const revealItems = el
+          ? (el.querySelectorAll(".reveal-item, .view-link") as NodeListOf<HTMLElement>)
+          : null;
+        return { el, revealItems, visible: false, timeoutId: 0, revealed: false };
+      });
+
       if (
         !masterTrack ||
         !scrollIndicator ||
@@ -69,7 +81,8 @@ export default function Home() {
         !solidClip ||
         !solidFixedSvg ||
         !solidFixedPath ||
-        !mascot
+        !mascot ||
+        !clouds
       )
         return;
 
@@ -161,7 +174,7 @@ export default function Home() {
       // 完整路径始终存在，clip 窗口从左边缘到吉祥物位置
 
       // 预渲染：HUD 层元素默认隐藏
-      gsap.set(mascot, { autoAlpha: 0, visibility: "visible" });
+      gsap.set([mascot, clouds], { opacity: 0, visibility: "hidden" });
 
       // 固定 SVG 的 x quickSetter：与 #master-track 同步平移
       const setSolidX = gsap.quickSetter(solidFixedSvg, "x", "px");
@@ -179,6 +192,75 @@ export default function Home() {
       // 旋转速度追踪（闭包变量，fly 段 onUpdate 中更新）
       let prevFlyP = 0;
       let mascotRotation = 0;
+
+      // 云朵惯性甩尾：延迟查询 DOM元素 + weight
+      let cloudEls: HTMLElement[] = [];
+      let cloudWeights: number[] = [];
+      let cloudsReady = false;
+      let cloudLogFrame = 0;
+
+      // 案例卡片惯性甩尾（数值为云朵的 1/2）
+      let workCardEls: HTMLElement[] = [];
+      let workCardWeights: number[] = [];
+      let workCardsReady = false;
+
+      const ensureCloudsReady = () => {
+        if (cloudsReady) return;
+        const els = clouds?.querySelectorAll<HTMLElement>("[data-cloud]");
+        if (els && els.length > 0) {
+          cloudEls = Array.from(els);
+          cloudWeights = cloudEls.map((el) => parseFloat(el.getAttribute("data-weight") || "1"));
+          cloudsReady = true;
+          console.log("[CloudSpring] ready, found", cloudEls.length, "clouds");
+        }
+      };
+
+      const widthVwMap: Record<string, number> = {
+        "w-[40vw]": 40, "w-[45vw]": 45, "w-[55vw]": 55,
+        "w-[60vw]": 60, "w-[70vw]": 70, "w-[75vw]": 75,
+        "w-[80vw]": 80, "w-[85vw]": 85,
+      };
+
+      const ensureWorkCardsReady = () => {
+        if (workCardsReady) return;
+        const els = document.querySelectorAll<HTMLElement>("[id^='work-']");
+        if (els && els.length > 0) {
+          workCardEls = Array.from(els);
+          workCardWeights = workCardEls.map((el) => {
+            // 从 width class 推算 weight（范围 0.67 ~ 1.42，大卡片惯性更大）
+            for (const [cls, vw] of Object.entries(widthVwMap)) {
+              if (el.classList.contains(cls)) return vw / 60;
+            }
+            return 1;
+          });
+          // 设置 CSS transition 用于回弹
+          workCardEls.forEach((el, i) => {
+            const w = workCardWeights[i];
+            el.style.transition = `transform ${0.6 + w * 0.6}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
+            el.style.willChange = "transform";
+          });
+          workCardsReady = true;
+          console.log("[WorkSpring] ready, found", workCardEls.length, "cards");
+        }
+      };
+
+      // 文字入场：仅在向右滚动进入视口时触发一次，向左滚动不反转
+      const updateWorkVisibility = () => {
+        workEntries.forEach((we) => {
+          if (!we.el || we.revealed) return;
+          const rect = we.el.getBoundingClientRect();
+          const inView = rect.right > 100 && rect.left < window.innerWidth - 100;
+          if (inView && !we.visible) {
+            we.visible = true;
+            we.timeoutId = window.setTimeout(() => {
+              we.revealed = true;
+              if (we.revealItems) {
+                we.revealItems.forEach((item) => item.classList.add("is-visible"));
+              }
+            }, 100);
+          }
+        });
+      };
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -282,7 +364,7 @@ export default function Home() {
         duration: 1,
         ease: "none",
       })
-        // reveal 阶段：同步实线平移（跟 track 一起移动）
+        // reveal 阶段：同步实线平移 + 跟踪可见作品
         .to(
           {},
           {
@@ -290,7 +372,9 @@ export default function Home() {
             ease: "none",
             onUpdate: function () {
               const p = this.progress();
-              setSolidX(wrapperOffset - lockOffset * p);
+              const trackX = -lockOffset * p;
+              setSolidX(wrapperOffset + trackX);
+              updateWorkVisibility();
             },
           },
           "<"
@@ -309,9 +393,9 @@ export default function Home() {
         // 轨道出现
         .to(guideSvg, { opacity: 1, duration: 0.8, ease: "power1.inOut" }, "fly")
         .to(solidClip, { opacity: 1, duration: 0.3 }, "fly")
-        // 吉祥物出场
-        .set(mascot, { autoAlpha: 1 }, "fly")
-        // 实线平移 + 吉祥物旋转：由 fly tween progress 统一驱动
+        // 吉祥物 + 云朵出场
+        .set([mascot, clouds], { opacity: 1, visibility: "visible" }, "fly")
+        // 实线平移 + 吉祥物旋转 + 作品可见性：由 fly tween progress 统一驱动
         .to(
           {},
           {
@@ -319,24 +403,55 @@ export default function Home() {
             ease: "none",
             onUpdate: function () {
               const p = this.progress(); // 局部进度 0→1
+              const trackX = -(lockOffset + p * flyDistancePx);
 
-              // 1) 实线：solidX = wrapperOffset + trackX（px，不是弧长）
-              setSolidX(wrapperOffset - lockOffset - p * flyDistancePx);
+              // 1) 实线：solidX = wrapperOffset + trackX
+              setSolidX(wrapperOffset + trackX);
 
-              // 2) 吉祥物旋转：基于滚动速度（帧间进度差）
+              // 2) 帧间滚动速度（在更新 prevFlyP 之前计算，供吉祥物和云朵共用）
+              const velocity = (p - prevFlyP) * 200;
+              const cardVelocity = (p - prevFlyP) * 150;
+              prevFlyP = p;
+
+              // 吉祥物旋转
               if (setMascotRotation) {
-                const velocity = (p - prevFlyP) * 100;
-                prevFlyP = p;
                 const target = Math.max(-15, Math.min(15, velocity * 30));
                 mascotRotation += (target - mascotRotation) * 0.12;
                 setMascotRotation(mascotRotation);
               }
+
+              // 3) 云朵惯性甩尾：直接设偏移量，CSS transition 负责平滑和回弹
+              ensureCloudsReady();
+              if (cloudEls.length > 0) {
+                cloudLogFrame++;
+                if (cloudLogFrame % 30 === 0) {
+                  console.log("[CloudSpring] velocity:", velocity.toFixed(3), "offset[0]:", (velocity * cloudWeights[0] * 300).toFixed(1));
+                }
+                for (let i = 0; i < cloudEls.length; i++) {
+                  const weight = cloudWeights[i];
+                  const offset = Math.max(-80, Math.min(80, velocity * weight * 300));
+                  cloudEls[i].style.transform = `translateX(${offset.toFixed(1)}px)`;
+                }
+              }
+
+              // 3.5) 案例卡片惯性甩尾（数值为云朵的 1/2）
+              ensureWorkCardsReady();
+              if (workCardEls.length > 0) {
+                for (let i = 0; i < workCardEls.length; i++) {
+                  const weight = workCardWeights[i];
+                  const offset = Math.max(-40, Math.min(40, cardVelocity * weight * 125));
+                  workCardEls[i].style.transform = `translateX(${offset.toFixed(1)}px)`;
+                }
+              }
+
+              // 4) 作品可见性：触发文字入场动画
+              updateWorkVisibility();
             },
           },
           "fly"
         )
         // fly 结束后隐藏
-        .set([mascot, solidClip], { autoAlpha: 0 });
+        .set([mascot, solidClip, clouds], { opacity: 0 });
     },
     { scope: masterRef }
   );
@@ -426,7 +541,7 @@ export default function Home() {
         {/* Stage 4 总容器：白底、溢出隐藏（阻断向左泄露） */}
         <div
           id="stage4-wrapper"
-          className="relative flex h-screen w-max flex-shrink-0 overflow-hidden bg-[#FAFAFA] items-stretch"
+          className="relative flex h-screen w-max flex-shrink-0 overflow-hidden bg-[#FDF8ED] items-stretch z-[4]"
         >
           {/* 轨道层：精确覆盖 stage4-wrapper，width/height 由 JS 控制（不是 w-full，会受 flex 压缩） */}
           <svg
@@ -438,12 +553,15 @@ export default function Home() {
               id="journey-path"
               fill="none"
               stroke="#d4d4d8"
-              strokeWidth="2"
+              strokeWidth="1.5"
               strokeDasharray="8 8"
             />
           </svg>
 
           {/* 轨道：虚线在内容层；实线在 HUD 层（clip 容器） */}
+
+          {/* 云朵装饰层：沿轨道散布，z-[1] 在轨道之上、作品之下 */}
+          <Clouds id="stage4-clouds" className="z-[1]" />
 
           {/* 【顶层】作品数据渲染层 */}
           {works.map((work, index) => (
@@ -462,10 +580,10 @@ export default function Home() {
         id="stage4-hud"
         className="pointer-events-none absolute inset-0 z-50"
       >
-        {/* 实线 clip：fixed 定位 + overflow-hidden，只露出 0→20vw 窗口 */}
+        {/* 实线 clip：fixed 定位 + overflow-hidden，只露出 0→20vw 窗口，z-[2] 在内容之下 */}
         <div
           id="solid-line-clip"
-          className="fixed top-0 h-full overflow-hidden pointer-events-none"
+          className="fixed top-0 h-full overflow-hidden pointer-events-none z-[2]"
           style={{ left: 0, width: "20vw", opacity: 0, visibility: "visible" }}
         >
           <svg
@@ -476,8 +594,8 @@ export default function Home() {
             <path
               id="journey-path-fixed-fill"
               fill="none"
-              stroke="#09090b"
-              strokeWidth="2"
+              stroke="#FF4D00"
+              strokeWidth="1.5"
             />
           </svg>
         </div>

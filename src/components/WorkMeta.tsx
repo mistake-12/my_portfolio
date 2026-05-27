@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Work } from "@/data/works";
+import { ArrowUpRight } from "lucide-react";
 
 interface WorkMetaProps {
   work: Work;
@@ -14,8 +15,11 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
   return (
     <div className="flex flex-col gap-8">
       {/* 序号 + 分类标签 */}
-      <div className="flex items-center justify-between">
-        <span className="inline-block border border-zinc-200 text-zinc-500 rounded-full px-3 py-1 text-xs font-mono tracking-widest">
+      <div
+        className="flex items-center justify-between reveal-item"
+        style={{ transitionDelay: "100ms" }}
+      >
+        <span className="inline-block border border-zinc-200 text-zinc-400 rounded-full px-3 py-1 text-xs font-mono tracking-widest">
           {serial}
         </span>
         {work.tags && work.tags.length > 0 && (
@@ -23,7 +27,7 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
             {work.tags.slice(0, 2).map((tag) => (
               <span
                 key={tag}
-                className="text-xs font-mono tracking-wider text-zinc-500 uppercase"
+                className="text-xs font-mono tracking-wider text-zinc-400 uppercase"
               >
                 [{tag.toLowerCase()}]
               </span>
@@ -33,29 +37,96 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
       </div>
 
       {/* 作品标题 */}
-      <h2 className="font-black text-4xl md:text-5xl lg:text-6xl text-zinc-900 leading-[1.05] tracking-tight">
+      <h2
+        className="font-black text-4xl md:text-5xl lg:text-6xl text-[#FF4D00] leading-[1.05] tracking-tight reveal-item reveal-title"
+        style={{ transitionDelay: "180ms" }}
+      >
         {work.title}
       </h2>
 
       {/* 描述 */}
       {work.description && (
-        <p className="max-w-md text-sm leading-relaxed text-zinc-500 font-sans">
+        <p
+          className="max-w-md text-sm leading-relaxed text-zinc-500 font-sans reveal-item"
+          style={{ transitionDelay: "260ms" }}
+        >
           {work.description}
         </p>
       )}
 
-      {/* 底部元信息 */}
-      <div className="mt-4 flex items-center gap-6">
-        <div className="flex items-center gap-3">
-          <div className="h-px w-8 bg-black/10" />
-          <span className="text-xs font-mono tracking-widest text-zinc-600 uppercase">
-            {work.category}
+      {/* 底部元信息 + 按钮 */}
+      <div
+        className="mt-4 flex items-center justify-between reveal-item"
+        style={{ transitionDelay: "340ms" }}
+      >
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <div className="h-px w-8 bg-black/10" />
+            <span className="text-xs font-mono tracking-widest text-zinc-600 uppercase">
+              {work.category}
+            </span>
+          </div>
+          <span className="text-xs font-mono text-zinc-400">
+            {work.year}
           </span>
         </div>
-        <span className="text-xs font-mono text-zinc-500">
-          {work.year}
-        </span>
+
+        {/* View Project 按钮 */}
+        <a
+          href={`#work-${work.id}`}
+          className="view-link group inline-flex items-center gap-1.5 text-xs font-mono tracking-wider uppercase"
+          style={{ color: "var(--color-accent)" }}
+          onClick={(e) => e.preventDefault()}
+        >
+          <span className="group-hover:translate-x-[-2px] transition-transform duration-300">
+            View Project
+          </span>
+          <ArrowUpRight
+            size={14}
+            className="group-hover:translate-x-[2px] group-hover:translate-y-[-1px] transition-transform duration-300"
+          />
+        </a>
       </div>
+
+      {/* 入场动画样式 */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .reveal-item {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          .reveal-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          .reveal-title {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          .reveal-title.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          .view-link {
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 1.0s cubic-bezier(0.25, 1, 0.5, 1);
+          }
+          .view-link.is-visible {
+            opacity: 1;
+            transform: scale(1);
+          }
+        `,
+        }}
+      />
     </div>
   );
 }

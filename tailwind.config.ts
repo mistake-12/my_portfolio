@@ -15,6 +15,9 @@ const config: Config = {
         "border-subtle": "rgba(255,255,255,0.05)",
         "border-default": "rgba(255,255,255,0.10)",
         "border-hover": "rgba(255,255,255,0.25)",
+        accent: "#2D2D5E",
+        "accent-light": "#3D3D7E",
+        "warm-bg": "#F5F4F0",
       },
       fontFamily: {
         serif: ["Abril Fatface", "Georgia", "serif"],
