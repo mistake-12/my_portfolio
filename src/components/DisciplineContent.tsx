@@ -80,7 +80,7 @@ function scrollToCategory(target: string) {
   // 淡入遮罩
   const overlay = document.createElement("div");
   overlay.style.cssText =
-    "position:fixed;inset:0;z-index:9999;background:#000;opacity:0;transition:opacity 0.25s;pointer-events:none";
+    "position:fixed;inset:0;z-index:9999;background:#2E2E2E;opacity:0;transition:opacity 0.25s;pointer-events:none";
   document.body.appendChild(overlay);
   requestAnimationFrame(() => { overlay.style.opacity = "1"; });
 

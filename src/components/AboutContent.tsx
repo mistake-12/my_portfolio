@@ -83,13 +83,23 @@ export default function AboutContent() {
       <div className="grid grid-cols-12 items-center gap-8 md:gap-12">
         {/* Avatar */}
         <div className="col-span-12 flex justify-center md:col-span-5">
-          <ProfilePhotoPlaceholder />
+          {profile.image ? (
+            <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] overflow-hidden rounded-[20px] border-[2px] border-white">
+              <img
+                src={profile.image}
+                alt={profile.name}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ) : (
+            <ProfilePhotoPlaceholder />
+          )}
         </div>
 
         {/* Text content */}
         <div className="col-span-12 md:col-span-7">
           <h2 className="mb-6 font-sans text-4xl font-semibold text-white sm:text-5xl">
-            Hello, I&apos;m JONY MA
+            Hello, I&apos;m 马子航
           </h2>
 
           <p className="mb-10 max-w-xl font-sans text-lg font-light leading-relaxed text-zinc-400">

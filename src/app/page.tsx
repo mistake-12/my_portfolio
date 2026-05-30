@@ -473,7 +473,7 @@ export default function Home() {
     <main
       id="master-pin-container"
       ref={masterRef}
-      className="relative h-screen w-full overflow-hidden bg-black"
+      className="relative h-screen w-full overflow-hidden bg-[#2E2E2E]"
     >
       {/* Landing 专属背景已挂载在胶片第一格内部 */}
       {/* 这里不再渲染全屏 Beams，避免干扰 Stage 4 的白色世界 */}
