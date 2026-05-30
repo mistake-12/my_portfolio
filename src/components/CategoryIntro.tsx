@@ -7,8 +7,8 @@ interface CloudSlot {
   right?: string;
   top?: string;
   bottom?: string;
-  scale: number;
-  delay: number;
+  scale?: number;
+  delay?: number;
 }
 
 interface CategoryIntroProps {
@@ -90,8 +90,8 @@ export default function CategoryIntro({
             style={{
               left: c.left, right: c.right,
               top: c.top, bottom: c.bottom,
-              width: 150 * c.scale,
-              height: 90 * c.scale,
+              width: 150 * (c.scale ?? 1),
+              height: 90 * (c.scale ?? 1),
               filter: "drop-shadow(0 8px 8px rgba(0,0,0,0.15))",
             }}
           >
@@ -100,7 +100,7 @@ export default function CategoryIntro({
               className="w-full h-full"
               style={{
                 animation: `cloud-drift ${28 + i * 6}s linear infinite`,
-                animationDelay: `-${c.delay}s`,
+                animationDelay: `-${c.delay ?? 0}s`,
                 "--drift-x": `${14 + i * 8}px`,
               } as React.CSSProperties}
             >
