@@ -87,23 +87,14 @@ export default function Home() {
       )
         return;
 
-      // 计算横向总距离（主轨道总宽 - 1个屏幕宽）
-      const horizontalDistance = masterTrack.scrollWidth - window.innerWidth;
-
-      // 生成 Stage 4 的程序化路径：起点严格为 Stage4 左侧 (x=0)
-      // 起始高度：随 viewport 动态变化（75% 处）
-      const baselineY = window.innerHeight * 0.75;
-
-      // ── 使用 Vector64.svg 的曲线路径作为可复用模板（平铺拼接，不缩放） ──
-      // 原始 SVG: width=3840 height=653，起点/终点 y=617.125
+      // ── 轨道尺寸与路径计算（被 setup 和 resize 共用） ──
       const VECTOR64_WIDTH = 3840;
       const VECTOR64_BASELINE_Y = 617.125;
 
       const baseD =
         "M0 617.125L177.275 460.241C198.189 441.732 229.108 440.101 251.854 456.307L357.259 531.405C385.529 551.547 424.942 543.569 443.153 514.018L500.973 420.198C515.706 396.291 574.113 414.134 599 401.125C640.518 379.423 654.27 355.94 665.024 328.933C676.677 299.669 708.568 286.453 737.679 298.486L741.145 299.918C772.503 312.88 808.361 297.28 820.256 265.502L901.436 48.6277C917.08 6.83563 971.247 -3.86286 1001.6 28.8435L1042.53 72.9355C1073.21 105.992 1128.03 94.6461 1143.07 52.1254L1147.18 40.4982C1164.33 -7.97377 1230.51 -13.8388 1255.92 30.8628L1370 231.625L1458.54 376.332C1475.49 404.051 1511.44 413.231 1539.61 397.041L1646.83 335.424C1679.57 316.614 1721.33 332.347 1733.52 368.078L1796.69 553.301C1813.81 603.496 1882.86 608.427 1906.94 561.174L1914.92 545.499C1932.39 511.224 1977.14 502.008 2006.73 526.592L2117.08 618.287C2139.56 636.967 2172.24 636.729 2194.44 617.721L2323.5 507.255C2329.77 501.892 2334.86 495.296 2338.46 487.878L2450.5 257.125L2517.13 122.044C2530.91 94.0968 2563.79 81.3535 2592.81 92.7144L2790.42 170.082C2817.17 180.559 2847.6 170.592 2862.98 146.315L2869.1 136.646C2893.2 98.6051 2949.05 99.6713 2971.67 138.604L2973.2 141.239C2991.56 172.834 3033.66 180.82 3062.31 158.144L3203.08 46.7422C3239.62 17.8321 3293.72 39.7706 3299.8 85.9591L3327.51 296.378C3333.63 342.871 3388.33 364.685 3424.77 335.165L3430.94 330.167C3460.74 306.018 3505.25 315.661 3522.38 349.983L3656.68 618.921C3669.61 644.821 3699.19 657.793 3727.01 649.76L3840 617.125";
 
-      // y 平移到 baselineY（保持形状不缩放），然后按需平铺拼接到 horizontalDistance
-      const shiftVector64Y = (dStr: string) => {
+      const shiftVector64Y = (dStr: string, baselineY: number) => {
         const tokens = dStr.match(/[A-Za-z]|-?\d*\.?\d+(?:e[-+]?\d+)?/g);
         if (!tokens) return dStr;
 
@@ -149,36 +140,33 @@ export default function Home() {
         return out.join(" ");
       };
 
-      const designD = shiftVector64Y(baseD);
-      const d = extendPath(designD, VECTOR64_WIDTH, horizontalDistance);
-      journeyPath.setAttribute("d", d);
-      solidFixedPath.setAttribute("d", d);
+      /** 刷新轨道 SVG 尺寸与路径，尺寸变化时调用 */
+      function refreshTrackDimensions() {
+        const hd = masterTrack.scrollWidth - window.innerWidth;
+        const by = window.innerHeight * 0.75;
 
-      // ── 路径生成与测量 ──────────────────────────────────────────────
+        const designD = shiftVector64Y(baseD, by);
+        const d = extendPath(designD, VECTOR64_WIDTH, hd);
+        journeyPath.setAttribute("d", d);
+        solidFixedPath.setAttribute("d", d);
 
-      const stage4Width = stage4Wrapper.scrollWidth;
-      const stage4Height = stage4Wrapper.clientHeight;
+        const sw = stage4Wrapper.scrollWidth;
+        const sh = stage4Wrapper.clientHeight;
 
-      // 虚线：内容层，跟随 scroll 自然滚动
-      guideSvg.style.width = `${stage4Width}px`;
-      guideSvg.style.height = `${stage4Height}px`;
-      guideSvg.setAttribute("viewBox", `0 0 ${stage4Width} ${stage4Height}`);
-      gsap.set(guideSvg, { opacity: 0, visibility: "visible" });
+        guideSvg.style.width = `${sw}px`;
+        guideSvg.style.height = `${sh}px`;
+        guideSvg.setAttribute("viewBox", `0 0 ${sw} ${sh}`);
+        gsap.set(guideSvg, { opacity: 0, visibility: "visible" });
 
-      // 实线：fixed clip 容器内，通过 translateX 同步内容滚动 + overflow:hidden 裁剪
-      solidFixedSvg.style.width = `${stage4Width}px`;
-      solidFixedSvg.style.height = `${stage4Height}px`;
-      solidFixedSvg.setAttribute("viewBox", `0 0 ${stage4Width} ${stage4Height}`);
-      gsap.set(solidClip, { opacity: 0, visibility: "visible" });
+        solidFixedSvg.style.width = `${sw}px`;
+        solidFixedSvg.style.height = `${sh}px`;
+        solidFixedSvg.setAttribute("viewBox", `0 0 ${sw} ${sh}`);
+        gsap.set(solidClip, { opacity: 0, visibility: "visible" });
 
-      // 窗口缩放/resize 时刷新页面，确保所有基于 innerWidth 的计算重新初始化
-      let resizeTimer: ReturnType<typeof setTimeout>;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
+        return hd;
+      }
+
+      refreshTrackDimensions();
 
       // 实线路径不需要 strokeDashoffset（clip 裁剪天然形成绘制效果）
       // 完整路径始终存在，clip 窗口从左边缘到吉祥物位置
@@ -190,8 +178,7 @@ export default function Home() {
       const setSolidX = gsap.quickSetter(solidFixedSvg, "x", "px");
 
       // 3D 翻转 + 横向平移全部合并为唯一 Timeline
-      // 总滚动空间 = 400vh(3D剧场) + horizontalDistance(横向轨道)
-      const totalScrollDistance = 400 + (horizontalDistance / window.innerWidth) * 100;
+      // 总滚动空间 = 400vh(3D剧场) + horizontalDistance(横向轨道)，end 由动态函数计算
 
       // 吉祥物旋转层：JS 通过此类名注入滚动速度旋转
       const mascotRotationEl = mascot.querySelector(".js-mascot-rotation") as HTMLElement | null;
@@ -272,27 +259,28 @@ export default function Home() {
         });
       };
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: masterContainer,
-          start: "top top",
-          end: () => {
-            const hd = masterTrack.scrollWidth - window.innerWidth;
-            return `+=${400 + (hd / window.innerWidth) * 100}%`;
+      function buildTimeline() {
+        const newTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: masterContainer,
+            start: "top top",
+            end: () => {
+              const hd = masterTrack.scrollWidth - window.innerWidth;
+              return `+=${400 + (hd / window.innerWidth) * 100}%`;
+            },
+            pin: true,
+            scrub: 0.5,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
           },
-          pin: true,
-          scrub: 0.5,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
+        });
 
       // ─────────────────────────────────────────────────────────────
       // 第一部分：3D 剧场（Stage 1 → Stage 2 → Stage 3）
       // ─────────────────────────────────────────────────────────────
 
       // Stage 1: 初始可见 → Z轴放大 + 模糊淡出
-      tl.to("#stage1", {
+      newTl.to("#stage1", {
         scale: 1.5,
         rotateX: 60,
         opacity: 0,
@@ -303,7 +291,7 @@ export default function Home() {
       });
 
       // Stage 2: 交叉淡入（Stage 1 消失后半段提前进入）
-      tl.fromTo(
+      newTl.fromTo(
         "#stage2",
         { y: 100, opacity: 0, pointerEvents: "none" },
         {
@@ -317,13 +305,13 @@ export default function Home() {
       );
 
       // 初始化 Stage 3：由 GSAP 接管，确保双向联动
-      tl.call(() => {
+      newTl.call(() => {
         gsap.set("#stage3", { rotateX: 90, opacity: 0 });
       });
 
       // Stage 2 → Stage 3：3D 翻转
       // 翻转前半段：Stage 2 翻转到 -90deg 消失
-      tl.to(
+      newTl.to(
         "#stage2, #scroll-indicator",
         {
           rotateX: -90,
@@ -336,7 +324,7 @@ export default function Home() {
       );
 
       // 翻转后半段：Stage 3 从 90deg 翻转到 0deg 显现
-      tl.fromTo(
+      newTl.fromTo(
         "#stage3",
         { rotateX: 90, opacity: 0 },
         {
@@ -349,7 +337,7 @@ export default function Home() {
       );
 
       // 停留阅读 Stage 3（节奏压缩：只保留极短缓冲）
-      tl.to({}, { duration: 0.1 });
+      newTl.to({}, { duration: 0.1 });
 
       // ─────────────────────────────────────────────────────────────
       // 第二部分：Stage 4 显形与飞行联动
@@ -365,15 +353,16 @@ export default function Home() {
       //   wrapperOffset = innerWidth（第一个胶片格 w-screen 的宽度）
       //   trackX 由 timeline 控制（reveal: 0→-lockOffset, fly: -lockOffset→end）
 
-      const wrapperOffset = Math.round(window.innerWidth);
       const lockOffset = Math.round(window.innerWidth * 0.1);
 
-      // fly 水平距离（px）
-      const flyDistancePx = Math.max(0, horizontalDistance - lockOffset);
+      // fly 水平距离（px），动态读取确保 resize 后自动更新
+      const getFlyDistancePx = () =>
+        Math.max(0, (masterTrack.scrollWidth - window.innerWidth) - window.innerWidth * 0.1);
+      const flyDistancePx = getFlyDistancePx();
       const dur = Math.max(0.001, flyDistancePx / window.innerWidth);
 
-      tl.to("#master-track", {
-        x: -lockOffset,
+      newTl.to("#master-track", {
+        x: () => -(window.innerWidth * 0.1),
         duration: 1,
         ease: "none",
       })
@@ -385,7 +374,8 @@ export default function Home() {
             ease: "none",
             onUpdate: function () {
               const p = this.progress();
-              const trackX = -lockOffset * p;
+              const lo = window.innerWidth * 0.1;
+              const trackX = -lo * p;
               setSolidX(window.innerWidth + trackX);
               updateWorkVisibility();
             },
@@ -397,7 +387,11 @@ export default function Home() {
         .to(
           "#master-track",
           {
-            x: -(lockOffset + flyDistancePx),
+            x: () => {
+              const lo = window.innerWidth * 0.1;
+              const fly = Math.max(0, (masterTrack.scrollWidth - window.innerWidth) - lo);
+              return -(lo + fly);
+            },
             duration: dur,
             ease: "none",
           },
@@ -416,7 +410,9 @@ export default function Home() {
             ease: "none",
             onUpdate: function () {
               const p = this.progress(); // 局部进度 0→1
-              const trackX = -(lockOffset + p * flyDistancePx);
+              const lo = window.innerWidth * 0.1;
+              const fly = Math.max(0, (masterTrack.scrollWidth - window.innerWidth) - lo);
+              const trackX = -(lo + p * fly);
 
               // 1) 实线：solidX = wrapperOffset + trackX
               setSolidX(window.innerWidth + trackX);
@@ -465,6 +461,34 @@ export default function Home() {
         )
         // fly 结束后隐藏
         .set([mascot, solidClip, clouds], { opacity: 0 });
+
+        return newTl;
+      }
+
+      const tl = buildTimeline();
+
+      // 窗口缩放/resize：保存进度 → 刷新轨道 → ScrollTrigger.refresh() → 恢复位置
+      // invalidateOnRefresh:true + 函数式 tween 值确保所有 innerWidth 依赖自动更新
+      let resizeTimer: ReturnType<typeof setTimeout>;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const progress = tl.scrollTrigger ? tl.scrollTrigger.progress : 0;
+          refreshTrackDimensions();
+          ScrollTrigger.refresh();
+          const st = tl.scrollTrigger;
+          if (st) {
+            const targetY = st.start + progress * (st.end - st.start);
+            // @ts-ignore
+            const lenis = window.lenis;
+            if (lenis && typeof lenis.scrollTo === "function") {
+              lenis.scrollTo(targetY, { immediate: true });
+            } else {
+              window.scrollTo(0, targetY);
+            }
+          }
+        }, 300);
+      });
     },
     { scope: masterRef }
   );
