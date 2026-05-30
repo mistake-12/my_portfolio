@@ -47,7 +47,7 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
       {/* 描述 */}
       {work.description && (
         <p
-          className="max-w-md text-sm leading-relaxed text-zinc-500 font-sans reveal-item"
+          className="w-full text-sm leading-relaxed text-zinc-500 font-sans reveal-item"
           style={{ transitionDelay: "260ms" }}
         >
           {work.description}
@@ -56,7 +56,7 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
 
       {/* 底部元信息 + 按钮 */}
       <div
-        className="mt-4 flex items-center justify-between reveal-item"
+        className="mt-4 flex items-center gap-12 reveal-item"
         style={{ transitionDelay: "340ms" }}
       >
         <div className="flex items-center gap-6">
@@ -75,7 +75,7 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
         <a
           href={`#work-${work.id}`}
           className="view-link group inline-flex items-center gap-1.5 text-xs font-mono tracking-wider uppercase"
-          style={{ color: "var(--color-accent)" }}
+          style={{ color: "#FF4D00" }}
           onClick={(e) => e.preventDefault()}
         >
           <span className="group-hover:translate-x-[-2px] transition-transform duration-300">

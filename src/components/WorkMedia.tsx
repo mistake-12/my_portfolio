@@ -19,10 +19,17 @@ const SHAPE_CONFIGS = [
 export default function WorkMedia({ work, index }: WorkMediaProps) {
   const shapeConfig = SHAPE_CONFIGS[index % SHAPE_CONFIGS.length];
 
+  // 隔离模式：父容器已通过 imageConfig 控制尺寸，组件填满父容器
+  const isIsolated = !!work.imageConfig && !!work.image;
+
   // 有图片时渲染真实图片
   if (work.image) {
     return (
-      <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
+      <div
+        className={`relative overflow-hidden rounded-[15px] ${
+          isIsolated ? "w-full h-full" : "aspect-[4/3]"
+        }`}
+      >
         <img
           src={work.image}
           alt={work.title}
@@ -35,7 +42,9 @@ export default function WorkMedia({ work, index }: WorkMediaProps) {
   // 无图片时渲染抽象几何占位
   return (
     <div
-      className={`relative aspect-[4/3] overflow-hidden rounded-sm bg-gradient-to-br ${shapeConfig.color}`}
+      className={`relative overflow-hidden rounded-[15px] bg-gradient-to-br ${shapeConfig.color} ${
+        isIsolated ? "w-full h-full" : "aspect-[4/3]"
+      }`}
     >
       {/* 几何形态占位符 */}
       <div

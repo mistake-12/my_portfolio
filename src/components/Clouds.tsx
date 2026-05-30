@@ -18,6 +18,7 @@ const widthMap: Record<string, number> = {
   "w-[75vw]": 75,
   "w-[80vw]": 80,
   "w-[85vw]": 85,
+  "w-[160vw]": 160,
 };
 
 interface CloudDef {
@@ -32,34 +33,47 @@ interface CloudDef {
 }
 
 // 每个作品区域生成 2-3 朵云，分布在轨道线的上方和下方
+// 将 cardGap 字符串转为 px 近似值（只处理 vw 单位）
+function parseGapToVw(gap?: string): number {
+  if (!gap) return 0;
+  const match = gap.match(/^(\d+(?:\.\d+)?)vw$/);
+  return match ? parseFloat(match[1]) : 0;
+}
+
 function generateClouds(): CloudDef[] {
   const clouds: CloudDef[] = [];
-  let cumulativeVw = 0;
+  let cumulativeVw = 100; // 工业设计 CategoryIntro 占 100vw
+
+  let prevCategory = works[0]?.categoryId;
 
   works.forEach((work, i) => {
+    // 自动检测分类变化：插入 100vw CategoryIntro（第一个分类前已在初始化时设 100）
+    if (i > 0 && work.categoryId !== prevCategory) {
+      cumulativeVw += 100;
+      prevCategory = work.categoryId;
+    }
     const w = widthMap[work.width] || 55;
+    const gapVw = parseGapToVw(work.cardGap);
+    cumulativeVw += gapVw;
     const areaStart = cumulativeVw;
     cumulativeVw += w;
 
-    // 每区域 2-3 朵云
-    const count = i % 3 === 0 ? 2 : 1;
-
+    const count = 3;
     for (let j = 0; j < count; j++) {
-      // 上方云：top 在 10%-55%，下方云：85%-95%（轨道线在 75%）
       const aboveTrack = j < Math.ceil(count / 2);
       const topPercent = aboveTrack
-        ? 10 + Math.random() * 45
-        : 85 + Math.random() * 10;
+        ? 15 + Math.random() * 35
+        : 65 + Math.random() * 20;
 
       clouds.push({
         id: `cloud-${i}-${j}`,
         leftVw: areaStart + Math.random() * w,
         topPercent,
-        scale: 0.5 + Math.random() * 1.2,
-        opacity: 0.08 + Math.random() * 0.12,
+        scale: 0.4 + Math.random() * 1.0,
+        opacity: 0.06 + Math.random() * 0.1,
         duration: 25 + Math.random() * 35,
         delay: -(Math.random() * 30),
-        driftX: 15 + Math.random() * 40,
+        driftX: 10 + Math.random() * 25,
       });
     }
   });
@@ -79,7 +93,7 @@ const Clouds = forwardRef<HTMLDivElement, CloudsProps>(
       <div
         ref={ref}
         id={id}
-        className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}
+        className={`absolute inset-0 pointer-events-none ${className}`}
         style={{ visibility: "hidden" as React.CSSProperties["visibility"], ...style }}
       >
         {/* SVG 形状定义 */}

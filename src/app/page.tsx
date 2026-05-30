@@ -13,6 +13,7 @@ import WorkCanvas from "@/components/WorkCanvas";
 import WorksProgress from "@/components/ui/WorksProgress";
 import FlyingMascot from "@/components/FlyingMascot";
 import Clouds from "@/components/Clouds";
+import CategoryIntro from "@/components/CategoryIntro";
 import { works } from "@/data/works";
 import { extendPath } from "@/lib/extendPath";
 
@@ -170,6 +171,15 @@ export default function Home() {
       solidFixedSvg.setAttribute("viewBox", `0 0 ${stage4Width} ${stage4Height}`);
       gsap.set(solidClip, { opacity: 0, visibility: "visible" });
 
+      // 窗口缩放/resize 时刷新页面，确保所有基于 innerWidth 的计算重新初始化
+      let resizeTimer: ReturnType<typeof setTimeout>;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
+
       // 实线路径不需要 strokeDashoffset（clip 裁剪天然形成绘制效果）
       // 完整路径始终存在，clip 窗口从左边缘到吉祥物位置
 
@@ -266,7 +276,10 @@ export default function Home() {
         scrollTrigger: {
           trigger: masterContainer,
           start: "top top",
-          end: () => `+=${totalScrollDistance}%`,
+          end: () => {
+            const hd = masterTrack.scrollWidth - window.innerWidth;
+            return `+=${400 + (hd / window.innerWidth) * 100}%`;
+          },
           pin: true,
           scrub: 0.5,
           anticipatePin: 1,
@@ -353,7 +366,7 @@ export default function Home() {
       //   trackX 由 timeline 控制（reveal: 0→-lockOffset, fly: -lockOffset→end）
 
       const wrapperOffset = Math.round(window.innerWidth);
-      const lockOffset = Math.round(window.innerWidth * 0.2);
+      const lockOffset = Math.round(window.innerWidth * 0.1);
 
       // fly 水平距离（px）
       const flyDistancePx = Math.max(0, horizontalDistance - lockOffset);
@@ -373,7 +386,7 @@ export default function Home() {
             onUpdate: function () {
               const p = this.progress();
               const trackX = -lockOffset * p;
-              setSolidX(wrapperOffset + trackX);
+              setSolidX(window.innerWidth + trackX);
               updateWorkVisibility();
             },
           },
@@ -406,7 +419,7 @@ export default function Home() {
               const trackX = -(lockOffset + p * flyDistancePx);
 
               // 1) 实线：solidX = wrapperOffset + trackX
-              setSolidX(wrapperOffset + trackX);
+              setSolidX(window.innerWidth + trackX);
 
               // 2) 帧间滚动速度（在更新 prevFlyP 之前计算，供吉祥物和云朵共用）
               const velocity = (p - prevFlyP) * 200;
@@ -541,7 +554,7 @@ export default function Home() {
         {/* Stage 4 总容器：白底、溢出隐藏（阻断向左泄露） */}
         <div
           id="stage4-wrapper"
-          className="relative flex h-screen w-max flex-shrink-0 overflow-hidden bg-[#FDF8ED] items-stretch z-[4]"
+          className="relative flex h-screen w-max flex-shrink-0 overflow-hidden bg-[#FDF8ED] z-[4]"
         >
           {/* 轨道层：精确覆盖 stage4-wrapper，width/height 由 JS 控制（不是 w-full，会受 flex 压缩） */}
           <svg
@@ -553,7 +566,7 @@ export default function Home() {
               id="journey-path"
               fill="none"
               stroke="#d4d4d8"
-              strokeWidth="1.5"
+              strokeWidth="1.8"
               strokeDasharray="8 8"
             />
           </svg>
@@ -563,15 +576,73 @@ export default function Home() {
           {/* 云朵装饰层：沿轨道散布，z-[1] 在轨道之上、作品之下 */}
           <Clouds id="stage4-clouds" className="z-[1]" />
 
-          {/* 【顶层】作品数据渲染层 */}
-          {works.map((work, index) => (
-            <WorkCanvas
-              key={work.id}
-              work={work}
-              index={index}
-              className={work.width}
-            />
-          ))}
+          {/* 【顶层】分类 + 作品渲染 */}
+          {/* 分组渲染：每组前面插入对应 CategoryIntro */}
+          {(() => {
+            // 按分类分组
+            const categoryOrder = [
+              { id: "industrial", title: "工业设计", subtitle: "Human-centered industrial design — where form, function and emotion converge at the scale of human experience. Every object begins with understanding how people live, feel, and connect." },
+              { id: "software", title: "软件开发", subtitle: "Product-thinking driven software development — beyond interfaces and codebases. Rooted in user scenarios, balanced between business intent and technical constraints, every interaction carries a clear product purpose." },
+              { id: "internship", title: "实习经历", subtitle: "Hands-on internship experience — bridging academic knowledge with industry practice. Real projects, real teams, and real impact across design and development disciplines." },
+              { id: "other", title: "其他项目", subtitle: "Other projects — exploring diverse creative territories beyond defined categories. Experiments, collaborations, and side explorations that expand the boundaries of design and development." },
+            ] as const;
+            const elements: React.ReactNode[] = [];
+            let globalIndex = 0;
+
+            categoryOrder.forEach(cat => {
+              elements.push(
+                <CategoryIntro
+                  key={`cat-${cat.id}`}
+                  id={`category-${cat.id}`}
+                  title={cat.title}
+                  subtitle={cat.subtitle}
+                />
+              );
+              works
+                .filter(w => w.categoryId === cat.id)
+                .forEach(w => {
+                  elements.push(
+                    <WorkCanvas
+                      key={w.id}
+                      work={w}
+                      index={globalIndex++}
+                      className={w.width}
+                    />
+                  );
+                });
+            });
+            // 自我介绍引导页（在所有作品之后）
+            elements.push(
+              <CategoryIntro
+                key="cat-about"
+                id="category-about"
+                title="About Me"
+                textPosition="top-right"
+                cloudSlots={[
+                  { left: "8%", top: "25%", scale: 0.85, delay: 0 },
+                  { right: "15%", top: "12%", scale: 1.1, delay: 5 },
+                  { left: "20%", bottom: "15%", scale: 0.7, delay: 2 },
+                  { right: "8%", bottom: "30%", scale: 0.95, delay: 8 },
+                ]}
+              />
+            );
+            // 空白引导页
+            elements.push(
+              <CategoryIntro
+                key="cat-blank"
+                id="category-blank"
+                title=""
+                hideLine
+                cloudSlots={[
+                  { left: "5%", top: "12%", scale: 1.2, delay: 0 },
+                  { right: "5%", top: "30%", scale: 0.75, delay: 6 },
+                  { left: "25%", bottom: "20%", scale: 0.9, delay: 4 },
+                  { right: "20%", bottom: "12%", scale: 1.05, delay: 9 },
+                ]}
+              />
+            );
+            return elements;
+          })()}
         </div>
       </div>
 
@@ -595,7 +666,7 @@ export default function Home() {
               id="journey-path-fixed-fill"
               fill="none"
               stroke="#FF4D00"
-              strokeWidth="1.5"
+              strokeWidth="1.8"
             />
           </svg>
         </div>
