@@ -142,6 +142,8 @@ export default function Home() {
 
       /** 刷新轨道 SVG 尺寸与路径，尺寸变化时调用 */
       function refreshTrackDimensions() {
+        if (!journeyPath || !solidFixedPath || !guideSvg || !solidFixedSvg || !solidClip || !stage4Wrapper) return 0;
+
         const hd = masterTrack.scrollWidth - window.innerWidth;
         const by = window.innerHeight * 0.75;
 
