@@ -208,3 +208,4 @@ fly 阶段不再使用：
 - `pt = path.getPointAtLength(len)`
 - `mascotX = viewportWidth * 0.2`
 - `mascotY = wrapperTop + pt.y`
+

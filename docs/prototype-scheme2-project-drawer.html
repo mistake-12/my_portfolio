@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prototype - Scheme 2 | Project Drawer</title>
+  <meta name="color-scheme" content="light" />
+  <style>
+    :root{
+      --bg: #FDF8ED;
+      --ink: #09090b;
+      --muted: rgba(9,9,11,.58);
+      --muted2: rgba(9,9,11,.42);
+      --hair: rgba(9,9,11,.10);
+      --hair2: rgba(9,9,11,.14);
+      --card: rgba(255,255,255,.68);
+      --accent: #FF4D00;
+
+      --r-lg: 16px;
+      --r-md: 14px;
+      --shadow: 0 22px 70px rgba(9,9,11,.14);
+      --shadow-soft: 0 14px 44px rgba(9,9,11,.10);
+      --ease: cubic-bezier(.16,1,.3,1);
+
+      --g: clamp(16px, 2.2vw, 28px);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x:hidden;
+    }
+
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    /* Background stage4 mock */
+    .stage{
+      min-height: 100dvh;
+      display:grid;
+      place-items:center;
+      padding: 24px;
+    }
+    .frame{
+      width: min(1200px, 96vw);
+      height: min(680px, 76vh);
+      border-radius: 18px;
+      border: 1px solid var(--hair);
+      background:
+        radial-gradient(1200px 420px at 12% -20%, rgba(255,77,0,.14), transparent 55%),
+        radial-gradient(900px 420px at 112% 115%, rgba(9,9,11,.10), transparent 60%),
+        rgba(255,255,255,.50);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow:hidden;
+    }
+    .frame::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.34));
+      pointer-events:none;
+    }
+
+    .track{
+      position:absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 1600px;
+      opacity: .9;
+      pointer-events:none;
+    }
+    .track path{
+      stroke: rgba(9,9,11,.16);
+      stroke-width: 2;
+      stroke-dasharray: 10 10;
+      fill:none;
+    }
+
+    .cards{
+      position:absolute;
+      inset: 0;
+      display:flex;
+      gap: 26px;
+      align-items:center;
+      padding: 0 40px;
+      transform: translateX(-120px);
+    }
+    .card{
+      width: 320px;
+      height: 420px;
+      border-radius: 16px;
+      border: 1px solid rgba(9,9,11,.10);
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 16px 44px rgba(9,9,11,.08);
+      position: relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(520px 260px at 22% 0%, rgba(255,77,0,.18), transparent 55%),
+        radial-gradient(520px 260px at 120% 120%, rgba(9,9,11,.10), transparent 60%);
+      opacity: .8;
+    }
+    .card .top{
+      position:absolute;
+      left: 16px;
+      right: 16px;
+      top: 14px;
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      color: rgba(9,9,11,.55);
+      font-size: 12px;
+    }
+    .pill{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(9,9,11,.14);
+      background: rgba(255,255,255,.60);
+    }
+    .card h3{
+      position:absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 58px;
+      margin:0;
+      font-size: 18px;
+      letter-spacing: -.01em;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .card .cta{
+      position:absolute;
+      left: 16px;
+      bottom: 18px;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,77,0,.22);
+      background: rgba(255,77,0,.08);
+      color: rgba(9,9,11,.86);
+      font-size: 12px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .35s var(--ease);
+    }
+    .card .cta:hover{ transform: translateY(-1px); }
+
+    /* Overlay + drawer */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(9,9,11,.26);
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .42s var(--ease);
+    }
+
+    .drawer{
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100dvh;
+      width: min(860px, 92vw);
+      transform: translateX(110%);
+      transition: transform .55s var(--ease);
+      z-index: 50;
+      padding: 14px;
+    }
+
+    .drawer-inner{
+      height: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.34);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.68), rgba(255,255,255,.44)),
+        rgba(255,255,255,.52);
+      backdrop-filter: blur(20px) saturate(170%);
+      -webkit-backdrop-filter: blur(20px) saturate(170%);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction: column;
+    }
+
+    .drawer-head{
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(9,9,11,.10);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title{
+      display:flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .title strong{
+      font-size: 14px;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .title span{ font-size: 12px; color: var(--muted); }
+
+    .actions{ display:flex; gap: 8px; align-items:center; }
+    .iconbtn{
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(9,9,11,.14);
+      background: rgba(255,255,255,.66);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      transition: transform .35s var(--ease), border-color .35s var(--ease);
+    }
+    .iconbtn:hover{ transform: translateY(-1px); border-color: rgba(9,9,11,.24); }
+
+    .drawer-body{
+      padding: 14px;
+      overflow:auto;
+      flex: 1;
+    }
+
+    .hero{
+      border-radius: 16px;
+      border: 1px solid rgba(9,9,11,.10);
+      background:
+        radial-gradient(900px 360px at 18% -18%, rgba(255,77,0,.20), transparent 58%),
+        radial-gradient(900px 360px at 110% 115%, rgba(9,9,11,.10), transparent 60%),
+        linear-gradient(135deg, rgba(9,9,11,.08), rgba(9,9,11,.02));
+      min-height: 240px;
+      position: relative;
+      overflow:hidden;
+    }
+    .hero::after{
+      content:"Replace with work.hero or work.image";
+      position:absolute;
+      left: 12px;
+      bottom: 10px;
+      font-size: 12px;
+      color: rgba(9,9,11,.45);
+    }
+
+    .grid{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .panel{
+      border-radius: 16px;
+      border: 1px solid rgba(9,9,11,.10);
+      background: rgba(255,255,255,.60);
+      padding: 12px;
+    }
+
+    .panel .k{
+      color: rgba(9,9,11,.45);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .panel .v{ margin-top: 8px; color: rgba(9,9,11,.80); font-size: 13px; line-height: 1.6; }
+
+    .gallery{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .shot{
+      border-radius: 16px;
+      border: 1px solid rgba(9,9,11,.10);
+      background:
+        radial-gradient(700px 260px at 18% -18%, rgba(255,77,0,.18), transparent 58%),
+        radial-gradient(700px 260px at 110% 115%, rgba(9,9,11,.10), transparent 60%),
+        linear-gradient(135deg, rgba(9,9,11,.10), rgba(9,9,11,.02));
+      min-height: 180px;
+      position: relative;
+      overflow:hidden;
+    }
+    .shot::after{ content:"Image slot"; position:absolute; left: 12px; bottom: 10px; font-size: 12px; color: rgba(9,9,11,.45); }
+
+    /* Open state */
+    body.is-open .overlay{ opacity: 1; pointer-events:auto; }
+    body.is-open .drawer{ transform: translateX(0%); }
+    body.is-open .frame{ filter: blur(2px) saturate(.95); transform: scale(.992); transition: filter .45s var(--ease), transform .45s var(--ease); }
+
+    .hint{
+      position:absolute;
+      left: 18px;
+      bottom: 16px;
+      font-size: 12px;
+      color: rgba(9,9,11,.56);
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(9,9,11,.10);
+      border-radius: 999px;
+      padding: 8px 10px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,77,0,.85);
+      box-shadow: 0 10px 30px rgba(255,77,0,.22);
+    }
+
+    @media (max-width: 920px){
+      .grid, .gallery{ grid-template-columns: 1fr; }
+      .cards{ padding: 0 22px; }
+      .card{ width: 280px; height: 400px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="frame" aria-label="Stage 4 mock">
+      <svg class="track" viewBox="0 0 1600 680" aria-hidden="true">
+        <path d="M0 510 C 210 390, 330 620, 520 520 S 870 420, 980 520 S 1260 650, 1600 510" />
+      </svg>
+
+      <div class="cards" aria-label="Work cards mock">
+        <div class="card" aria-label="Card 1">
+          <div class="top">
+            <span class="pill mono">US_01_24</span>
+            <span class="pill mono">2024</span>
+          </div>
+          <h3><span style="color: var(--accent);">Modular Speaker</span><br/>System</h3>
+          <button class="cta mono" id="open">View project</button>
+        </div>
+        <div class="card" aria-label="Card 2">
+          <div class="top">
+            <span class="pill mono">US_02_24</span>
+            <span class="pill mono">2024</span>
+          </div>
+          <h3>Dashboard UI Kit</h3>
+          <div class="cta mono" style="opacity:.55; cursor: default;">View project</div>
+        </div>
+        <div class="card" aria-label="Card 3">
+          <div class="top">
+            <span class="pill mono">US_03_24</span>
+            <span class="pill mono">2023</span>
+          </div>
+          <h3>E-Commerce Experience</h3>
+          <div class="cta mono" style="opacity:.55; cursor: default;">View project</div>
+        </div>
+      </div>
+
+      <div class="hint" aria-hidden="true">
+        <span class="dot"></span>
+        <span class="mono">Prototype for Scheme 2 drawer</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <aside class="drawer" role="dialog" aria-modal="true" aria-label="Project drawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <div class="title">
+          <strong>Modular Speaker System</strong>
+          <span class="mono">Product Design · 2024</span>
+        </div>
+        <div class="actions">
+          <button class="iconbtn" id="copy" title="Copy link" aria-label="Copy link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+          <button class="iconbtn" id="close" title="Close" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+        <div class="hero" role="img" aria-label="Hero placeholder"></div>
+
+        <div class="grid">
+          <div class="panel">
+            <div class="k mono">Overview</div>
+            <div class="v">One paragraph that explains the project in plain language. This can reuse your work.description field.</div>
+          </div>
+          <div class="panel">
+            <div class="k mono">Quick facts</div>
+            <div class="v">Role, tools, timeline, links. Keep it scannable and short.</div>
+          </div>
+        </div>
+
+        <div class="gallery" aria-label="Gallery">
+          <div class="shot" aria-label="Image slot 1"></div>
+          <div class="shot" aria-label="Image slot 2"></div>
+          <div class="shot" aria-label="Image slot 3"></div>
+          <div class="shot" aria-label="Image slot 4"></div>
+        </div>
+
+        <div style="height: 12px;"></div>
+
+        <div class="panel">
+          <div class="k mono">Next step</div>
+          <div class="v">In the real build, the drawer can include a "Open full case study" button to route to Scheme 1 if you want both.</div>
+        </div>
+
+        <div style="height: 18px;"></div>
+        <div class="mono" style="color: rgba(9,9,11,.52); font-size: 12px;">Prototype file only. Uses current palette. Reduced motion supported.</div>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    const openBtn = document.getElementById('open');
+    const closeBtn = document.getElementById('close');
+    const overlay = document.getElementById('overlay');
+    const copyBtn = document.getElementById('copy');
+
+    function openDrawer(){
+      document.body.classList.add('is-open');
+      document.querySelector('.drawer').setAttribute('aria-hidden','false');
+      overlay.setAttribute('aria-hidden','false');
+    }
+
+    function closeDrawer(){
+      document.body.classList.remove('is-open');
+      document.querySelector('.drawer').setAttribute('aria-hidden','true');
+      overlay.setAttribute('aria-hidden','true');
+    }
+
+    openBtn?.addEventListener('click', openDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    overlay?.addEventListener('click', closeDrawer);
+
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') closeDrawer();
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      const url = location.href.split('#')[0] + '#drawer';
+      try{
+        await navigator.clipboard.writeText(url);
+        copyBtn.style.borderColor = 'rgba(255,77,0,.42)';
+        copyBtn.style.background = 'rgba(255,77,0,.10)';
+        setTimeout(() => {
+          copyBtn.style.borderColor = 'rgba(9,9,11,.14)';
+          copyBtn.style.background = 'rgba(255,255,255,.66)';
+        }, 650);
+      }catch{
+        // ignore
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prototype - Scheme 1 | Project Detail</title>
+  <meta name="color-scheme" content="light" />
+  <style>
+    :root{
+      --bg: #FDF8ED;
+      --ink: #09090b;
+      --muted: rgba(9,9,11,.58);
+      --muted2: rgba(9,9,11,.42);
+      --hair: rgba(9,9,11,.10);
+      --hair2: rgba(9,9,11,.14);
+      --card: rgba(255,255,255,.72);
+      --accent: #FF4D00;
+
+      --r-lg: 16px;
+      --r-md: 14px;
+      --shadow: 0 18px 60px rgba(9,9,11,.12);
+      --shadow-soft: 0 14px 44px rgba(9,9,11,.10);
+      --ease: cubic-bezier(.16,1,.3,1);
+
+      --max: 1180px;
+      --g: clamp(16px, 2.2vw, 28px);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .wrap{ max-width: var(--max); margin:0 auto; padding: 0 var(--g); }
+
+    /* Top nav */
+    .nav{
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      background: linear-gradient(180deg, rgba(253,248,237,.86), rgba(253,248,237,.64));
+      border-bottom: 1px solid var(--hair);
+    }
+    .nav-inner{
+      height: 72px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 220px;
+    }
+    .mark{
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid var(--hair2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+      display:grid;
+      place-items:center;
+      font-weight: 800;
+    }
+    .nav-links{
+      display:flex;
+      gap: 16px;
+      align-items:center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .nav-links a{ padding: 10px 10px; border-radius: 999px; }
+    .nav-links a:hover{ background: rgba(9,9,11,.04); color: var(--ink); }
+
+    .nav-cta{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content:flex-end;
+      min-width: 220px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--hair2);
+      background: rgba(255,255,255,.76);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+      transition: transform .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease);
+      cursor:pointer;
+      user-select:none;
+      font-size: 13px;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(9,9,11,.22); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+
+    .btn-primary{
+      border-color: rgba(255,77,0,.22);
+      background: rgba(255,77,0,.08);
+    }
+    .btn-primary:hover{
+      border-color: rgba(255,77,0,.42);
+      background: rgba(255,77,0,.11);
+    }
+
+    /* Hero */
+    .hero{
+      padding: clamp(28px, 5vw, 56px) 0 22px;
+    }
+    .crumb{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .crumb a:hover{ color: var(--ink); }
+
+    .hero-grid{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap: clamp(18px, 3vw, 34px);
+      align-items: start;
+    }
+
+    .kicker{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items:center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .chip{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--hair2);
+      background: rgba(255,255,255,.72);
+    }
+
+    h1{
+      margin: 14px 0 0;
+      font-size: clamp(40px, 4.9vw, 64px);
+      line-height: 1.02;
+      letter-spacing: -.03em;
+    }
+    .accent{ color: var(--accent); }
+
+    .sub{
+      margin: 12px 0 0;
+      color: var(--muted);
+      max-width: 58ch;
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .facts{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .fact{
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.64);
+      border-radius: var(--r-md);
+      padding: 12px 12px;
+    }
+    .fact .l{ color: var(--muted2); font-size: 11px; letter-spacing:.08em; text-transform: uppercase; }
+    .fact .v{ margin-top:6px; font-size: 13px; color: var(--ink); }
+
+    .hero-media{
+      border-radius: var(--r-lg);
+      border: 1px solid var(--hair);
+      overflow:hidden;
+      background: rgba(255,255,255,.72);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      min-height: 420px;
+    }
+    .hero-media::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(1200px 420px at 14% -12%, rgba(255,77,0,.18), transparent 52%),
+        radial-gradient(900px 520px at 110% 18%, rgba(9,9,11,.08), transparent 56%),
+        linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.62));
+      pointer-events:none;
+    }
+    .hero-media .img{
+      position:absolute;
+      inset: 22px;
+      border-radius: 14px;
+      border: 1px solid rgba(9,9,11,.10);
+      background:
+        linear-gradient(135deg, rgba(9,9,11,.08), rgba(9,9,11,.02)),
+        radial-gradient(700px 320px at 50% 20%, rgba(255,77,0,.20), transparent 62%),
+        radial-gradient(700px 420px at 50% 120%, rgba(9,9,11,.10), transparent 62%);
+      overflow:hidden;
+    }
+    .hero-media .img::after{
+      content:"Replace with /public/works/<id>/hero.webp";
+      position:absolute;
+      left: 14px;
+      bottom: 12px;
+      color: rgba(9,9,11,.45);
+      font-size: 12px;
+    }
+
+    /* Body layout */
+    .main{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap: clamp(18px, 3vw, 34px);
+      padding: 10px 0 70px;
+      align-items: start;
+    }
+
+    /* Sticky summary */
+    .sticky{
+      position: sticky;
+      top: 92px;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.72);
+      box-shadow: var(--shadow-soft);
+      overflow:hidden;
+    }
+    .sticky-h{
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--hair);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .sticky-h .t{ font-size: 12px; color: var(--muted); }
+    .sticky-h .pill{
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,77,0,.22);
+      background: rgba(255,77,0,.08);
+      color: var(--ink);
+    }
+    .sticky-b{ padding: 12px 14px 14px; }
+
+    .jump{
+      display:grid;
+      gap: 8px;
+    }
+    .jump a{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.62);
+      color: var(--muted);
+      font-size: 13px;
+      transition: transform .35s var(--ease), border-color .35s var(--ease);
+    }
+    .jump a:hover{ transform: translateY(-1px); border-color: rgba(9,9,11,.22); color: var(--ink); }
+
+    /* Sections */
+    section{
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.66);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-soft);
+      overflow:hidden;
+    }
+    .sec{
+      padding: 18px 18px 20px;
+    }
+    .sec + .sec{ border-top: 1px solid var(--hair); }
+
+    .sec-h{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    .sec-h h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: -.01em;
+    }
+    .sec-h .m{
+      color: var(--muted2);
+      font-size: 12px;
+    }
+
+    .cols3{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .mini{
+      border-radius: 14px;
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.62);
+      padding: 12px 12px;
+      min-height: 120px;
+    }
+    .mini .k{ color: var(--muted2); font-size: 11px; letter-spacing:.08em; text-transform: uppercase; }
+    .mini .v{ margin-top: 8px; color: var(--ink); font-size: 13px; line-height: 1.6; }
+
+    .gallery{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .shot{
+      border-radius: 14px;
+      border: 1px solid var(--hair);
+      overflow:hidden;
+      background: linear-gradient(135deg, rgba(9,9,11,.09), rgba(9,9,11,.02));
+      position: relative;
+      min-height: 220px;
+    }
+    .shot::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(700px 260px at 20% -20%, rgba(255,77,0,.20), transparent 55%),
+        radial-gradient(700px 260px at 120% 120%, rgba(9,9,11,.10), transparent 60%);
+      opacity: .9;
+    }
+    .shot::after{
+      content:"Image slot";
+      position:absolute;
+      left: 12px;
+      bottom: 10px;
+      font-size: 12px;
+      color: rgba(9,9,11,.45);
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .para{
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+      max-width: 68ch;
+    }
+
+    .callout{
+      border-radius: 14px;
+      border: 1px solid rgba(255,77,0,.20);
+      background: rgba(255,77,0,.06);
+      padding: 12px 12px;
+      color: rgba(9,9,11,.74);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .foot{
+      border-top: 1px solid var(--hair);
+      padding: 20px 0 30px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .foot-grid{
+      display:flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items:center;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .main{ grid-template-columns: 1fr; }
+      .sticky{ position: relative; top: auto; }
+      .cols3{ grid-template-columns: 1fr; }
+      .gallery{ grid-template-columns: 1fr; }
+      .split{ grid-template-columns: 1fr; }
+      .brand, .nav-cta{ min-width: 0; }
+      .nav-links{ display:none; }
+      .hero-media{ min-height: 360px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap">
+      <div class="nav-inner">
+        <div class="brand">
+          <div class="mark">J</div>
+          <div>
+            <div style="font-weight: 700; letter-spacing: -.01em;">JONY MA</div>
+            <div class="mono" style="font-size: 11px; color: var(--muted);">Portfolio case study</div>
+          </div>
+        </div>
+
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#overview">Overview</a>
+          <a href="#showcase">Showcase</a>
+          <a href="#process">Process</a>
+          <a href="#final">Links</a>
+        </nav>
+
+        <div class="nav-cta">
+          <a class="btn" href="#" onclick="history.back(); return false;">Back</a>
+          <a class="btn btn-primary" href="#final">Open links</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="crumb">
+          <div class="mono">Works / <span style="color: var(--ink);">modular-speaker</span></div>
+          <a class="mono" href="#final">Share</a>
+        </div>
+
+        <div class="hero-grid">
+          <div>
+            <div class="kicker">
+              <span class="chip mono">Product Design</span>
+              <span class="chip mono">2024</span>
+              <span class="chip mono" style="border-color: rgba(255,77,0,.22); background: rgba(255,77,0,.08);">Featured</span>
+            </div>
+
+            <h1>
+              Modular Speaker <span class="accent">System</span>
+            </h1>
+
+            <p class="sub">
+              A modular speaker system designed for seamless integration into modern living spaces. This prototype shows layout rhythm, not final copy.
+            </p>
+
+            <div class="facts">
+              <div class="fact">
+                <div class="l mono">Role</div>
+                <div class="v">Product design, interaction, visual direction</div>
+              </div>
+              <div class="fact">
+                <div class="l mono">Tools</div>
+                <div class="v">Rhino, KeyShot, Figma</div>
+              </div>
+              <div class="fact">
+                <div class="l mono">Timeline</div>
+                <div class="v">6 weeks, concept to prototype</div>
+              </div>
+              <div class="fact">
+                <div class="l mono">Deliverables</div>
+                <div class="v">CMF, form study, UI spec, motion notes</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-media" aria-label="Hero media">
+            <div class="img" role="img" aria-label="Hero image placeholder"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="main">
+        <div>
+          <section id="overview" aria-label="Overview">
+            <div class="sec">
+              <div class="sec-h">
+                <h2>Overview</h2>
+                <div class="m mono">Problem, approach, outcome</div>
+              </div>
+              <div class="cols3">
+                <div class="mini">
+                  <div class="k mono">Problem</div>
+                  <div class="v">Consumers want flexibility, but modular products often feel visually fragmented and hard to set up.</div>
+                </div>
+                <div class="mini">
+                  <div class="k mono">Approach</div>
+                  <div class="v">One consistent geometry and a repeatable joining system, plus a simple interaction model.</div>
+                </div>
+                <div class="mini">
+                  <div class="k mono">Outcome</div>
+                  <div class="v">A family of modules that can scale, with a clear setup flow and a coherent silhouette.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec">
+              <div class="sec-h">
+                <h2>Key decisions</h2>
+                <div class="m mono">What matters and why</div>
+              </div>
+              <div class="split">
+                <div class="para">
+                  <p style="margin:0 0 10px;">This section is where you win interviews. Keep it concrete:</p>
+                  <ul style="margin:0; padding-left: 18px; display:grid; gap: 8px;">
+                    <li>Why this joinery method survives daily use.</li>
+                    <li>How the module sizes map to real living rooms.</li>
+                    <li>What you intentionally did not build to keep scope honest.</li>
+                  </ul>
+                </div>
+                <div class="callout">
+                  <div class="mono" style="font-size: 11px; letter-spacing:.08em; text-transform: uppercase; color: rgba(9,9,11,.6);">Tip</div>
+                  <div style="margin-top:8px;">Use one sentence per decision. Add one image per decision if possible. Avoid long paragraphs.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div style="height: 14px;"></div>
+
+          <section id="showcase" aria-label="Showcase">
+            <div class="sec">
+              <div class="sec-h">
+                <h2>Showcase</h2>
+                <div class="m mono">Gallery</div>
+              </div>
+              <div class="gallery" role="list">
+                <div class="shot" role="listitem" aria-label="Image slot 1"></div>
+                <div class="shot" role="listitem" aria-label="Image slot 2"></div>
+                <div class="shot" role="listitem" aria-label="Image slot 3"></div>
+                <div class="shot" role="listitem" aria-label="Image slot 4"></div>
+              </div>
+            </div>
+          </section>
+
+          <div style="height: 14px;"></div>
+
+          <section id="process" aria-label="Process">
+            <div class="sec">
+              <div class="sec-h">
+                <h2>Process</h2>
+                <div class="m mono">Condensed, skimmable</div>
+              </div>
+              <div class="split">
+                <div>
+                  <div class="mini" style="min-height:auto;">
+                    <div class="k mono">Research</div>
+                    <div class="v">3 quick competitor teardowns and a home setup observation to define constraints.</div>
+                  </div>
+                  <div style="height: 12px;"></div>
+                  <div class="mini" style="min-height:auto;">
+                    <div class="k mono">Iteration</div>
+                    <div class="v">Two form factors tested, then converged to one silhouette for a coherent family.</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="mini" style="min-height:auto;">
+                    <div class="k mono">System</div>
+                    <div class="v">A small set of geometry rules for corners, seams, and control surfaces.</div>
+                  </div>
+                  <div style="height: 12px;"></div>
+                  <div class="mini" style="min-height:auto;">
+                    <div class="k mono">Handoff</div>
+                    <div class="v">Exploded view, spec sheet, and motion guidance for the onboarding flow.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div style="height: 14px;"></div>
+
+          <section id="final" aria-label="Links and next">
+            <div class="sec">
+              <div class="sec-h">
+                <h2>Links</h2>
+                <div class="m mono">External</div>
+              </div>
+              <div class="split">
+                <div class="para">
+                  <p style="margin:0 0 10px;">Put your strongest proof here. Keep it to 2 to 4 links.</p>
+                  <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                    <a class="btn" href="#">Figma</a>
+                    <a class="btn" href="#">Live build</a>
+                    <a class="btn" href="#">PDF</a>
+                  </div>
+                </div>
+                <div class="callout">
+                  <div class="mono" style="font-size: 11px; letter-spacing:.08em; text-transform: uppercase; color: rgba(9,9,11,.6);">Next</div>
+                  <div style="margin-top:8px;">Add a next and previous navigation so the reviewer can keep scanning with one click.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="foot">
+            <div class="foot-grid wrap" style="padding:0;">
+              <div class="mono">Prototype file only. Uses current palette: paper bg + orange accent.</div>
+              <div class="mono">No em-dashes. Reduced motion supported.</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="sticky" aria-label="Sticky summary">
+          <div class="sticky-h">
+            <div class="t mono">Quick scan</div>
+            <div class="pill mono">Case study</div>
+          </div>
+          <div class="sticky-b">
+            <div style="display:grid; gap: 10px;">
+              <div class="fact" style="padding: 10px 10px;">
+                <div class="l mono">What to paste</div>
+                <div class="v">Hero image, 4 gallery images, and 3 short paragraphs.</div>
+              </div>
+              <div class="jump">
+                <a href="#overview"><span>Overview</span><span class="mono">01</span></a>
+                <a href="#showcase"><span>Showcase</span><span class="mono">02</span></a>
+                <a href="#process"><span>Process</span><span class="mono">03</span></a>
+                <a href="#final"><span>Links</span><span class="mono">04</span></a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

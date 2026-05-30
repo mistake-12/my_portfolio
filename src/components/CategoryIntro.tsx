@@ -2,6 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 
+interface CloudSlot {
+  left?: string;
+  right?: string;
+  top?: string;
+  bottom?: string;
+  scale: number;
+  delay: number;
+}
+
 interface CategoryIntroProps {
   id?: string;
   title: string;
@@ -10,15 +19,15 @@ interface CategoryIntroProps {
   accentColor?: string;
   textPosition?: "center" | "top-right";
   hideLine?: boolean;
-  cloudSlots?: Partial<typeof defaultCloudSlots>[0][];
+  cloudSlots?: CloudSlot[];
 }
 
-const defaultCloudSlots = [
+const defaultCloudSlots: CloudSlot[] = [
   { left: "10%", top: "18%", scale: 1.05, delay: 0 },
   { right: "10%", top: "20%", scale: 0.9, delay: 4 },
   { left: "12%", bottom: "22%", scale: 0.98, delay: 3 },
   { right: "12%", bottom: "24%", scale: 1.12, delay: 7 },
-] as const;
+];
 
 export default function CategoryIntro({
   id,
