@@ -14,7 +14,7 @@ export interface Work {
   // 散点排版控制
   layout: "img-left" | "img-right" | "stacked";
   alignY: "start" | "center" | "end";
-  width: "w-[40vw]" | "w-[45vw]" | "w-[55vw]" | "w-[60vw]" | "w-[70vw]" | "w-[75vw]" | "w-[80vw]" | "w-[85vw]" | "w-[160vw]";
+  width: "w-[40vw]" | "w-[45vw]" | "w-[55vw]" | "w-[60vw]" | "w-[70vw]" | "w-[75vw]" | "w-[80vw]" | "w-[85vw]" | "w-[120vw]" | "w-[160vw]" | "w-[200vw]" | "w-[250vw]";
   // 图片独立定位（absolute 脱离 grid）
   imageConfig?: {
     width: string;   // e.g., "45vw", "50%"

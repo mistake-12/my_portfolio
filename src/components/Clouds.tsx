@@ -18,7 +18,10 @@ const widthMap: Record<string, number> = {
   "w-[75vw]": 75,
   "w-[80vw]": 80,
   "w-[85vw]": 85,
+  "w-[120vw]": 120,
   "w-[160vw]": 160,
+  "w-[200vw]": 200,
+  "w-[250vw]": 250,
 };
 
 interface CloudDef {

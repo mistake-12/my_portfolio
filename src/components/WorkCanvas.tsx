@@ -35,7 +35,10 @@ const widthMap: Record<string, string> = {
   "w-[75vw]": "max-w-5xl",
   "w-[80vw]": "max-w-6xl",
   "w-[85vw]": "max-w-6xl",
+  "w-[120vw]": "max-w-6xl",
   "w-[160vw]": "max-w-6xl",
+  "w-[200vw]": "max-w-6xl",
+  "w-[250vw]": "max-w-6xl",
 };
 
 export default function WorkCanvas({ work, index, className = "" }: WorkCanvasProps) {
