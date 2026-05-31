@@ -82,7 +82,7 @@ export default function AboutContent() {
     <div className="mx-auto w-full max-w-6xl -translate-y-8 md:-translate-y-12">
       <div className="grid grid-cols-12 items-center gap-8 md:gap-12">
         {/* Avatar */}
-        <div className="col-span-12 flex justify-center md:col-span-5">
+        <div className="col-span-12 flex justify-center md:col-span-5 -translate-y-[25px]">
           {profile.image ? (
             <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] overflow-hidden rounded-[20px] border-[2px] border-white">
               <img

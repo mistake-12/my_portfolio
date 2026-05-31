@@ -71,29 +71,56 @@ export default function WorkCanvas({ work, index, className = "" }: WorkCanvasPr
       {useIsolatedImage && (
         <div className="absolute inset-0 z-0 pointer-events-none">
           {/* 主图 */}
-          <div style={imageAbsoluteStyle}>
+          <div style={imageAbsoluteStyle} className="pointer-events-auto">
             <WorkMedia work={work} index={index} />
           </div>
+          {work.imageConfig?.caption && (
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                width: work.imageConfig!.width,
+                top: `calc(${work.imageConfig!.top} + ${work.imageConfig!.height} + 8px)`,
+                left: work.imageConfig!.left,
+                right: work.imageConfig!.right,
+              }}
+            >
+              <p className="text-center text-sm leading-relaxed text-zinc-500 font-sans">{work.imageConfig.caption}</p>
+            </div>
+          )}
           {/* 额外图片（独立定位，叠加在主图附近） */}
           {work.extraImages?.map((img, idx) => (
               <div
                 key={`extra-${idx}`}
+                className="pointer-events-auto"
                 style={{
                   position: "absolute",
                   width: img.width,
-                  height: img.height,
                   top: img.top,
                   right: img.right,
                   left: img.left,
                 }}
               >
-                <div className="relative w-full h-full overflow-hidden rounded-[15px]">
-                  <img
-                    src={img.url}
-                    alt={`${work.title} - ${idx + 2}`}
-                    className="h-full w-full object-cover"
-                  />
+                <div className="relative w-full overflow-hidden rounded-[15px] pointer-events-auto" style={{ height: img.height }}>
+                  {img.video ? (
+                    <video
+                      src={img.url}
+                      className="h-full w-full object-cover"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    />
+                  ) : (
+                    <img
+                      src={img.url}
+                      alt={`${work.title} - ${idx + 2}`}
+                      className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                    />
+                  )}
                 </div>
+                {img.caption && (
+                  <p className="mt-1.5 text-center text-sm leading-relaxed text-zinc-500 font-sans">{img.caption}</p>
+                )}
               </div>
             ))}
           {/* 装饰云朵：固定在图片下方 */}
@@ -125,9 +152,9 @@ export default function WorkCanvas({ work, index, className = "" }: WorkCanvasPr
         </div>
       )}
 
-      {/* 内容安全区：py-24 防贴边，px-12/32 提供呼吸空间 */}
+      {/* 内容安全区：pointer-events-none 让鼠标穿透到图片，内层 pointer-events-auto 保留文字交互 */}
       <div
-        className={`relative z-10 flex h-full w-full ${alignItems} ${justifyContent} px-8 md:px-24 lg:px-32 py-24`}
+        className={`relative z-10 flex h-full w-full pointer-events-none ${alignItems} ${justifyContent} px-8 md:px-24 lg:px-32 py-24`}
         style={{
           ...(work.offsetX ? { paddingLeft: work.offsetX } : {}),
           ...(work.offsetY ? { marginTop: work.offsetY } : {}),
@@ -135,7 +162,7 @@ export default function WorkCanvas({ work, index, className = "" }: WorkCanvasPr
       >
         {/* 隔离模式：单列只放文字；普通模式：双列图文 */}
         <div
-          className={`w-full ${maxWidth} ${
+          className={`w-full pointer-events-auto ${maxWidth} ${
             useIsolatedImage
               ? "max-w-[608px]"
               : isStacked

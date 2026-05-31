@@ -3,6 +3,7 @@
 import React from "react";
 import { Work } from "@/data/works";
 import { ArrowUpRight } from "lucide-react";
+import { showMascotMessage } from "@/lib/mascot-events";
 
 interface WorkMetaProps {
   work: Work;
@@ -47,7 +48,7 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
       {/* 描述 */}
       {work.description && (
         <p
-          className="w-full text-sm leading-relaxed text-zinc-500 font-sans reveal-item"
+          className="w-full text-base leading-relaxed text-zinc-500 font-sans reveal-item"
           style={{ transitionDelay: "260ms" }}
         >
           {work.description}
@@ -71,21 +72,40 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
           </span>
         </div>
 
-        {/* View Project 按钮 */}
-        <a
-          href={`#work-${work.id}`}
-          className="view-link group inline-flex items-center gap-1.5 text-xs font-mono tracking-wider uppercase"
-          style={{ color: "#FF4D00" }}
-          onClick={(e) => e.preventDefault()}
-        >
-          <span className="group-hover:translate-x-[-2px] transition-transform duration-300">
-            View Project
-          </span>
-          <ArrowUpRight
-            size={14}
-            className="group-hover:translate-x-[2px] group-hover:translate-y-[-1px] transition-transform duration-300"
-          />
-        </a>
+        {/* View Project + GitHub 按钮 */}
+        <div className="flex items-baseline gap-4">
+          <a
+            href={`#work-${work.id}`}
+            className="view-link group inline-flex items-center gap-1.5 text-xs font-mono tracking-wider uppercase"
+            style={{ color: "#FF4D00" }}
+            onClick={(e) => { e.preventDefault(); showMascotMessage("不好意思二级界面现在还没做捏，潇洒哥正在加急开发~~~"); }}
+          >
+            <span className="leading-none group-hover:translate-x-[-2px] transition-transform duration-300">
+              项目详情
+            </span>
+            <ArrowUpRight
+              size={16}
+              className="inline-flex group-hover:translate-x-[2px] group-hover:translate-y-[-1px] transition-transform duration-300"
+            />
+          </a>
+          {work.github && (
+            <a
+              href={work.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`view-link group inline-flex items-center gap-1.5 font-mono tracking-wider uppercase ${work.linkLabel ? "text-xs" : "text-sm"}`}
+              style={{ color: "#FF4D00" }}
+            >
+              <span className="leading-none group-hover:translate-x-[-2px] transition-transform duration-300">
+                {work.linkLabel || "GitHub"}
+              </span>
+              <ArrowUpRight
+                size={16}
+                className="inline-flex group-hover:translate-x-[2px] group-hover:translate-y-[-1px] transition-transform duration-300"
+              />
+            </a>
+          )}
+        </div>
       </div>
 
       {/* 入场动画样式 */}

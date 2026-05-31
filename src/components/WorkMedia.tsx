@@ -22,19 +22,31 @@ export default function WorkMedia({ work, index }: WorkMediaProps) {
   // 隔离模式：父容器已通过 imageConfig 控制尺寸，组件填满父容器
   const isIsolated = !!work.imageConfig && !!work.image;
 
-  // 有图片时渲染真实图片
+  // 有图片/视频时渲染
   if (work.image) {
+    const isVideo = work.image.endsWith(".mp4");
     return (
       <div
         className={`relative overflow-hidden rounded-[15px] ${
           isIsolated ? "w-full h-full" : "aspect-[4/3]"
         }`}
       >
-        <img
-          src={work.image}
-          alt={work.title}
-          className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-        />
+        {isVideo ? (
+          <video
+            src={work.image}
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        ) : (
+          <img
+            src={work.image}
+            alt={work.title}
+            className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+          />
+        )}
       </div>
     );
   }

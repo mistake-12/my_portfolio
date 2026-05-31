@@ -615,7 +615,15 @@ export default function Home() {
             const elements: React.ReactNode[] = [];
             let globalIndex = 0;
 
-            categoryOrder.forEach(cat => {
+            const spacerWidth: Record<string, number> = { software: 800 };
+            categoryOrder.forEach((cat, catIdx) => {
+              // 特定分类引导页前加空白间距
+              const sw = spacerWidth[cat.id] || (catIdx > 0 ? 200 : 0);
+              if (sw > 0) {
+                elements.push(
+                  <div key={`spacer-${cat.id}`} style={{ width: `${sw}px`, height: "100vh", flexShrink: 0 }} />
+                );
+              }
               elements.push(
                 <CategoryIntro
                   key={`cat-${cat.id}`}

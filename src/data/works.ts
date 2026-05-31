@@ -22,8 +22,9 @@ export interface Work {
     top?: string;    // e.g., "10%", "5vh"
     right?: string;  // e.g., "5%"
     left?: string;   // e.g., "5%"
+    caption?: string; // 图片下方说明文字
   };
-  // 额外图片（与主图同层 absolute，可独立定位）
+  // 额外图片/视频（与主图同层 absolute，可独立定位）
   extraImages?: Array<{
     url: string;
     width: string;
@@ -31,6 +32,8 @@ export interface Work {
     top?: string;
     left?: string;
     right?: string;
+    caption?: string;  // 图片下方说明文字
+    video?: boolean;    // 标记为视频
   }>;
   // 装饰云朵（absolute 定位在图片附近）
   decorClouds?: Array<{
@@ -38,6 +41,9 @@ export interface Work {
     top: string;
     scale?: number;
   }>;
+  // 外部链接
+  github?: string;     // GitHub / 项目地址
+  linkLabel?: string;  // 按钮文字，默认 "GitHub"
   // 整体内容区水平偏移（正值向右）
   offsetX?: string;  // e.g., "500px", "10vw"
   // 内容区垂直偏移（正值向下）
@@ -67,6 +73,8 @@ export const works: Work[] = [
     extraImages: [
       { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1779973996030_外饰13.png", width: "22.5vw", height: "30vh", top: "calc(45% + 100px)", left: "calc(100% - 45% + 250px)" },
       { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780131519601_外饰12.png", width: "33.75vw", height: "40vh", top: "calc(45% + 100px - 35vh - 50px)", left: "calc(100% - 45% + 250px + 22.5vw + 250px)" },
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780250950546_Video_Pc2.mp4", width: "33.75vw", height: "19vw", top: "calc(45% + 100px)", left: "calc(100% - 45% + 250px + 22.5vw + 250px + 33.75vw + 100px)", video: true },
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1779973999623_内饰图.png", width: "24vw", height: "32vh", top: "calc(45% + 100px - 32vh - 30px - 5vh)", left: "calc(100% - 45% + 250px + 22.5vw + 250px + 33.75vw + 100px + 4.9vw)", caption: "内饰设计" },
     ],
     offsetX: "97vw",
     offsetY: "50px",
@@ -77,110 +85,92 @@ export const works: Work[] = [
   },
   {
     id: "w2",
-    title: "E-Commerce Experience",
-    category: "Interaction Design",
+    title: "无忧萌环",
+    category: "Product Design",
     categoryId: "industrial",
-    disciplineId: "interaction",
-    year: "2023",
-    image: "",
-    slug: "ecommerce-experience",
+    disciplineId: "industrial",
+    year: "2025",
+    image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780234888494_3.png",
+    slug: "epilepsy-monitor-watch",
     featured: true,
-    description: "Immersive shopping experience with seamless transitions and micro-interactions.",
-    tags: ["Interaction", "Digital"],
-    // 作品 3：紧凑画幅 · 图上文下文堆叠 · 垂直靠上（stacked 保持默认布局）
-    layout: "stacked",
+    description: "无忧萌环是一个基于肌电+心率的儿童癫痫智能检测手表。癫痫是一种突发性神经疾病，大部分为局灶性运动性癫痫，其表现为短暂的肢体抽动，且较难及时被发现。现阶段检测手段主要依靠脑电判断病情，儿童检测意愿差，同时癫痫缺少日常的检测手段，尤其是在夜晚时期。我们的产品目标是让儿童癫痫发作不再悄无声息，构建医患实时联动的治疗体系，为每一位患儿及家属带来更安心的康复体验。",
+    tags: ["Product", "Medical"],
+    layout: "img-right",
     alignY: "start",
-    width: "w-[40vw]",
-    cardGap: "40vw",
+    width: "w-[160vw]",
+    imageConfig: { width: "40vw", height: "55vh", top: "8%", left: "calc(100% - 40vw - 40%)", caption: "外观模型" },
+    extraImages: [
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780229654021_image_157.png", width: "28vw", height: "15.9vw", top: "calc(45% + 100px)", left: "calc(100% - 40% + 100px)" },
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780229654941_image_156.png", width: "33.75vw", height: "40vh", top: "calc(45% + 100px - 35vh - 50px)", left: "calc(100% - 40% + 100px + 28vw + 100px)", caption: "功能模型" },
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780229649522_image_155.png", width: "25vw", height: "32vh", top: "calc(45% + 100px)", left: "calc(100% - 40% + 100px + 28vw + 100px + 33.75vw + 100px)" },
+    ],
+    offsetX: "100vw",
+    offsetY: "50px",
+    cardGap: "30vw",
   },
   {
     id: "w3",
-    title: "Brand Identity System",
-    category: "Visual Design",
+    title: "Reso-Mate共振伙伴",
+    category: "Product Design",
     categoryId: "industrial",
-    disciplineId: "visual",
-    year: "2023",
-    image: "",
-    slug: "brand-identity",
+    disciplineId: "industrial",
+    year: "2025",
+    image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780230766014_aa6a45f1fab4cf93e70c21c7636cdb48.png",
+    slug: "reso-mate",
     featured: true,
-    description: "Complete brand identity for a tech startup, from logo to design system.",
-    tags: ["Brand", "Visual"],
-    // 作品 4：宽幅画幅 · 图片靠右 · 垂直靠下
+    description: `一句话描述：属于自闭症患者的打碟机。可以通过旋转旋钮按压等等交互方式将刻板行为转化为节奏性音乐。它将自闭症儿童重复的"自我刺激"行为从一种带有污名的问题转变为一种自我调节的音乐创作过程，为情绪释放提供安全的出口。`,
+    tags: ["Product", "Industrial"],
     layout: "img-right",
-    alignY: "end",
+    alignY: "start",
     width: "w-[70vw]",
-    imageConfig: { width: "38vw", height: "55vh", top: "25%", right: "3%" },
+    imageConfig: { width: "38vw", height: "55vh", top: "calc(25% - 10vh)", right: "-25vw" },
+    offsetX: "20vw",
+    cardGap: "50vw",
   },
   {
     id: "w4",
-    title: "Kinetic Typography",
-    category: "Motion Design",
+    title: "多模态数据监视平台",
+    category: "Full-Stack Development",
     categoryId: "software",
-    disciplineId: "motion",
-    year: "2023",
-    image: "",
-    slug: "kinetic-typography",
+    disciplineId: "software",
+    year: "2024",
+    image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780242102793_UI.png",
+    slug: "prp-sensor-platform",
     featured: true,
-    description: "Experimental type animation exploring rhythm, weight, and temporal pacing in letterforms.",
-    tags: ["Motion", "Typography"],
+    description: `项目为学校与荣泰按摩椅合作项目，通过多模态数据采集与分析进行舒适度评估。是一个软硬件结合的生理数据（肌电和心率）实时可视化平台，前端Vue3框架后端ThinkPHP8，通过 WebSocket 实现传感器数据的实时采集、推送与可视化展示。支持心率曲线、肌电波形、热力图等多维图表，包含完整的用户管理系统和历史报告分析功能。`,
+    tags: ["PHP", "Vue", "WebSocket"],
+    github: "https://github.com/mistake-12/prp-project",
     // 作品 5：中等画幅 · 图片靠左 · 垂直靠上
     layout: "img-left",
     alignY: "start",
-    width: "w-[60vw]",
-    imageConfig: { width: "32vw", height: "52vh", top: "8%", left: "3%" },
+    width: "w-[120vw]",
+    imageConfig: { width: "56vw", height: "31.4vw", top: "8%", left: "3%" },
+    extraImages: [
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780245116935_Video_Project_1.mp4", width: "42vw", height: "23.6vw", top: "calc(8% + 40vh)", left: "calc(3% + 56vw + 20vw + 120px)", video: true },
+    ],
+    offsetX: "64vw",
+    cardGap: "30vw",
   },
   {
     id: "w5",
-    title: "Generative Art Series",
-    category: "Creative Coding",
+    title: "WooJob!!! 求职伙伴",
+    category: "Full-Stack Development",
     categoryId: "software",
-    disciplineId: "creative",
-    year: "2022",
-    image: "",
-    slug: "generative-art",
+    disciplineId: "software",
+    year: "2025",
+    image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780248187314_Video_P.mp4",
+    slug: "woojob",
     featured: true,
-    description: "A collection of algorithmic compositions where randomness meets controlled chaos.",
-    tags: ["Creative", "Code"],
-    // 作品 6：紧凑画幅 · 图上文下文堆叠 · 垂直靠下
-    layout: "stacked",
-    alignY: "end",
-    width: "w-[45vw]",
-  },
-  {
-    id: "w6",
-    title: "Wayfinding System",
-    category: "Environmental Design",
-    categoryId: "software",
-    disciplineId: "environmental",
-    year: "2022",
-    image: "",
-    slug: "wayfinding-system",
-    featured: true,
-    description: "Comprehensive navigation system for a contemporary art museum spanning 12,000 sqm.",
-    tags: ["Environmental", "UX"],
-    // 作品 7：宽幅画幅 · 图片靠右 · 垂直靠上
+    description: "（MVP已部署，功能仍在完善中）专为高校毕业生与年轻白领打造的 All-in-One AI 求职全生命周期管理平台。基于 Next.js + Supabase + AI Agent 架构，提供敏捷求职看板、待办日程引擎、AI 模拟面试及 NLU 极速建档等核心功能，从投递到 Offer 全流程智能化。",
+    tags: ["Next.js", "Supabase", "AI"],
+    github: "https://woo-job.vercel.app/",
+    linkLabel: "打开网址",
     layout: "img-right",
     alignY: "start",
-    width: "w-[75vw]",
-    imageConfig: { width: "42vw", height: "58vh", top: "8%", right: "3%" },
-  },
-  {
-    id: "w7",
-    title: "Spatial Sound App",
-    category: "Sound Design",
-    categoryId: "software",
-    disciplineId: "audio",
-    year: "2022",
-    image: "",
-    slug: "spatial-sound",
-    featured: true,
-    description: "Immersive audio interface for binaural music production and spatial audio mastering.",
-    tags: ["Sound", "Product"],
-    // 作品 8：中等画幅 · 图片靠左 · 垂直靠下
-    layout: "img-left",
-    alignY: "end",
-    width: "w-[55vw]",
-    imageConfig: { width: "28vw", height: "50vh", top: "28%", left: "3%" },
+    width: "w-[70vw]",
+    imageConfig: { width: "48vw", height: "27.7vw", top: "8%", left: "3%" },
+    offsetY: "50vh",
+    cardGap: "60vw",
   },
   {
     id: "w8",
