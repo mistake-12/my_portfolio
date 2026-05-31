@@ -16,6 +16,7 @@ import Clouds from "@/components/Clouds";
 import CategoryIntro from "@/components/CategoryIntro";
 import { works } from "@/data/works";
 import { extendPath } from "@/lib/extendPath";
+import { showMascotMessage } from "@/lib/mascot-events";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -457,6 +458,20 @@ export default function Home() {
 
               // 4) 作品可见性：触发文字入场动画
               updateWorkVisibility();
+
+              // 5) 吉祥物气泡：分类引导页进入视口时弹出
+              if (shownBubbles.size < bubbleCategories.length) {
+                bubbleCategories.forEach((catId) => {
+                  if (shownBubbles.has(catId)) return;
+                  const el = document.getElementById(`category-${catId}`);
+                  if (!el) return;
+                  const rect = el.getBoundingClientRect();
+                  if (rect.left < window.innerWidth && rect.right > 0) {
+                    shownBubbles.add(catId);
+                    showMascotMessage(categoryBubbleMessages[catId]);
+                  }
+                });
+              }
             },
           },
           "fly"
@@ -491,6 +506,14 @@ export default function Home() {
           }
         }, 300);
       });
+
+      // 吉祥物对话：经过"实习经历"和"其他项目"引导页时自动弹出
+      const shownBubbles = new Set<string>();
+      const bubbleCategories = ["internship", "other"];
+      const categoryBubbleMessages: Record<string, string> = {
+        internship: "实习项目还没添加/(ㄒoㄒ)/~~",
+        other: "其他项目还没添加/(ㄒoㄒ)/~~",
+      };
     },
     { scope: masterRef }
   );

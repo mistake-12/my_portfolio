@@ -49,6 +49,7 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
       {work.description && (
         <p
           className="w-full text-base leading-relaxed text-zinc-500 font-sans reveal-item"
+          style={{ textAlign: "justify", textAlignLast: "justify", textJustify: "inter-character" }}
           style={{ transitionDelay: "260ms" }}
         >
           {work.description}

@@ -144,9 +144,9 @@ export const works: Work[] = [
     layout: "img-left",
     alignY: "start",
     width: "w-[120vw]",
-    imageConfig: { width: "56vw", height: "31.4vw", top: "8%", left: "3%" },
+    imageConfig: { width: "56vw", height: "31.4vw", top: "8%", left: "calc(3% + 20vw)" },
     extraImages: [
-      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780245116935_Video_Project_1.mp4", width: "42vw", height: "23.6vw", top: "calc(8% + 40vh)", left: "calc(3% + 56vw + 20vw + 120px)", video: true },
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780245116935_Video_Project_1.mp4", width: "42vw", height: "23.6vw", top: "calc(8% + 40vh)", left: "calc(3% + 20vw + 56vw + 20vw + 120px)", video: true },
     ],
     offsetX: "64vw",
     cardGap: "30vw",
