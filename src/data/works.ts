@@ -137,7 +137,7 @@ export const works: Work[] = [
     image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780242102793_UI.png",
     slug: "prp-sensor-platform",
     featured: true,
-    description: `项目为学校与荣泰按摩椅合作项目，通过多模态数据采集与分析进行舒适度评估。是一个软硬件结合的生理数据（肌电和心率）实时可视化平台，前端Vue3框架后端ThinkPHP8，通过 WebSocket 实现传感器数据的实时采集、推送与可视化展示。支持心率曲线、肌电波形、热力图等多维图表，包含完整的用户管理系统和历史报告分析功能。`,
+    description: `校企合作项目。项目的立意是：按摩的舒适度是主观的感受，但对于企业来说按摩椅的迭代十分需要量化的舒适度来作为迭代的依据。因此我们期望通过多模态数据采集和训练检测模型来进行舒适度评估。这是一个软硬件结合的生理数据（肌电和心率）实时可视化平台，前端Vue3框架后端ThinkPHP8，通过 WebSocket 实现传感器数据的实时采集、推送与可视化展示。支持心率曲线、肌电波形、热力图等多维图表，包含完整的用户管理系统和历史报告分析功能。`,
     tags: ["PHP", "Vue", "WebSocket"],
     github: "https://github.com/mistake-12/prp-project",
     // 作品 5：中等画幅 · 图片靠左 · 垂直靠上
@@ -161,7 +161,7 @@ export const works: Work[] = [
     image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780248187314_Video_P.mp4",
     slug: "woojob",
     featured: true,
-    description: "（MVP已部署，功能仍在完善中）专为高校毕业生与年轻白领打造的 All-in-One AI 求职全生命周期管理平台。基于 Next.js + Supabase + AI Agent 架构，提供敏捷求职看板、待办日程引擎、AI 模拟面试及 NLU 极速建档等核心功能，从投递到 Offer 全流程智能化。",
+    description: "（MVP已部署，功能仍在完善中）专为高校毕业生与年轻白领打造的 All-in-One AI 求职全生命周期管理平台。基于 Next.js + Supabase + AI Agent 架构，提供敏捷求职看板、待办日程引擎、AI 求职项目指导及 NLU 极速建档等核心功能，从投递到 Offer 全流程智能化。",
     tags: ["Next.js", "Supabase", "AI"],
     github: "https://woo-job.vercel.app/",
     linkLabel: "打开网址",

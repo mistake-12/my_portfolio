@@ -459,14 +459,14 @@ export default function Home() {
               // 4) 作品可见性：触发文字入场动画
               updateWorkVisibility();
 
-              // 5) 吉祥物气泡：分类引导页进入视口时弹出
+              // 5) 吉祥物气泡：分类引导页完全离开视口后弹出
               if (shownBubbles.size < bubbleCategories.length) {
                 bubbleCategories.forEach((catId) => {
                   if (shownBubbles.has(catId)) return;
                   const el = document.getElementById(`category-${catId}`);
                   if (!el) return;
                   const rect = el.getBoundingClientRect();
-                  if (rect.left < window.innerWidth && rect.right > 0) {
+                  if (rect.right <= 0) {
                     shownBubbles.add(catId);
                     showMascotMessage(categoryBubbleMessages[catId]);
                   }
