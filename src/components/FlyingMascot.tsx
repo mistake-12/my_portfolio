@@ -69,7 +69,7 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
       id={id}
       className={`fixed pointer-events-auto cursor-pointer z-[100] ${className}`}
       style={{
-        left: "20vw",
+        left: "25vw",
         top: "75vh",
         transform: "translate(-50%, -50%)",
         opacity: 0,

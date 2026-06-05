@@ -56,14 +56,14 @@ export default function LoadingScreen() {
     const mo = new MutationObserver(() => scan());
     mo.observe(document.body, { childList: true, subtree: true });
 
-    // 超时兜底：5 秒后无论如何淡出
+    // 超时兜底：10 秒后无论如何淡出
     const timeout = setTimeout(() => {
       if (!doneRef.current) {
         doneRef.current = true;
         setProgress(100);
         setTimeout(() => setVisible(false), 400);
       }
-    }, 5000);
+    }, 10000);
 
     return () => {
       mo.disconnect();

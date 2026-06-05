@@ -486,17 +486,16 @@ export default function Home() {
                 const pFillStart = Math.max(0, Math.min(1, (window.innerWidth + aboutPx - lo) / fly));
                 if (p >= pFillStart && pFillStart < 1) {
                   const fillProgress = (p - pFillStart) / (1 - pFillStart);
-                  solidClip!.style.width = `${(20 + fillProgress * 80).toFixed(1)}vw`;
+                  solidClip!.style.width = `${(25 + fillProgress * 75).toFixed(1)}vw`;
                 } else {
-                  solidClip!.style.width = "20vw";
+                  solidClip!.style.width = "25vw";
                 }
               }
             },
           },
           "fly"
         )
-        // fly 结束后隐藏
-        .set([mascot, solidClip, clouds, nav], { opacity: 0 });
+        // fly 结束后保持元素可见（不再隐藏 mascot/clouds/nav/solidClip）
 
         return newTl;
       }
@@ -731,7 +730,7 @@ export default function Home() {
         <div
           id="solid-line-clip"
           className="fixed top-0 h-full overflow-hidden pointer-events-none z-[2]"
-          style={{ left: 0, width: "20vw", opacity: 0, visibility: "visible" }}
+          style={{ left: 0, width: "25vw", opacity: 0, visibility: "visible" }}
         >
           <svg
             id="solid-line-fixed-svg"
