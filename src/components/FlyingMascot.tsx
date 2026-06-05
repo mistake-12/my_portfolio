@@ -1,7 +1,7 @@
 "use client";
 
-import { forwardRef, useEffect, useState } from "react";
-import { onMascotMessage } from "@/lib/mascot-events";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { getRandomQuote, onMascotMessage, showMascotMessage } from "@/lib/mascot-events";
 
 interface FlyingMascotProps {
   id?: string;
@@ -13,20 +13,59 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
   ({ id, className = "", style }, ref) => {
     const [bubbleMsg, setBubbleMsg] = useState("");
     const [bubbleVisible, setBubbleVisible] = useState(false);
+    const [bouncing, setBouncing] = useState(false);
+    const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const bubbleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const bubbleShowingRef = useRef(false);
 
     useEffect(() => {
       return onMascotMessage((msg) => {
+        // 气泡已在显示中，不打断，让点击和自动弹出互不干扰
+        if (bubbleShowingRef.current) return;
+        bubbleShowingRef.current = true;
         setBubbleMsg(msg);
         setBubbleVisible(true);
-        setTimeout(() => setBubbleVisible(false), 4000);
+        bubbleTimerRef.current = setTimeout(() => {
+          setBubbleVisible(false);
+          bubbleShowingRef.current = false;
+          bubbleTimerRef.current = null;
+        }, 4000);
       });
+    }, []);
+
+    // Auto-pop random quote on timer (15-30s interval)
+    useEffect(() => {
+      let timeoutId: ReturnType<typeof setTimeout>;
+      const mascotEl = document.getElementById("flying-mascot");
+
+      const scheduleNext = () => {
+        const delay = 15000 + Math.random() * 15000;
+        timeoutId = setTimeout(() => {
+          if (mascotEl && mascotEl.style.opacity === "1") {
+            showMascotMessage(getRandomQuote());
+          }
+          scheduleNext();
+        }, delay);
+      };
+
+      scheduleNext();
+      return () => clearTimeout(timeoutId);
+    }, []);
+
+    const handleClick = useCallback(() => {
+      showMascotMessage(getRandomQuote());
+
+      // Trigger bounce animation
+      setBouncing(true);
+      if (bounceTimerRef.current) clearTimeout(bounceTimerRef.current);
+      bounceTimerRef.current = setTimeout(() => setBouncing(false), 300);
     }, []);
 
     return (
     <div
       ref={ref}
       id={id}
-      className={`fixed pointer-events-none z-[100] ${className}`}
+      className={`fixed pointer-events-auto cursor-pointer z-[100] ${className}`}
       style={{
         left: "20vw",
         top: "75vh",
@@ -34,6 +73,7 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
         opacity: 0,
         ...style,
       }}
+      onClick={handleClick}
     >
       {/* 对话气泡 */}
       {bubbleVisible && (
@@ -84,6 +124,15 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
             animation: "mascot-float 3s ease-in-out infinite",
           }}
         >
+          {/* 点击弹跳层（与浮动动画分离，避免 transform 冲突） */}
+          <div
+            className="absolute inset-0"
+            style={{
+              animation: bouncing
+                ? "mascot-bounce 0.3s ease-in-out"
+                : "none",
+            }}
+          >
           <div
             className="absolute inset-0 rounded-xl border-2 bg-white"
             style={{ borderColor: "#18181b" }}
@@ -149,6 +198,7 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
             <svg width="14" height="8" viewBox="0 0 14 8" fill="none" className="relative" style={{ top: "-2px" }}>
               <path d="M3 2 Q7 7 11 2" stroke="#18181b" strokeWidth="1.5" strokeLinecap="round" fill="none" />
             </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -167,6 +217,10 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
           @keyframes bubble-in {
             from { opacity: 0; transform: translateX(-50%) translateY(4px) scale(0.95); }
             to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+          }
+          @keyframes mascot-bounce {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.25); }
           }
         `,
         }}

@@ -13,6 +13,7 @@ import WorkCanvas from "@/components/WorkCanvas";
 import WorksProgress from "@/components/ui/WorksProgress";
 import FlyingMascot from "@/components/FlyingMascot";
 import Clouds from "@/components/Clouds";
+import NavBar from "@/components/NavBar";
 import CategoryIntro from "@/components/CategoryIntro";
 import { works } from "@/data/works";
 import { extendPath } from "@/lib/extendPath";
@@ -61,6 +62,8 @@ export default function Home() {
         "#flying-mascot"
       ) as HTMLElement | null;
 
+      const nav = document.querySelector("#stage4-nav") as HTMLElement | null;
+
       const clouds = stage4Wrapper?.querySelector("#stage4-clouds") as HTMLElement | null;
 
       // 收集所有 WorkCanvas 的 DOM 引用 + 其内部需要触发入场动画的元素
@@ -84,6 +87,7 @@ export default function Home() {
         !solidFixedSvg ||
         !solidFixedPath ||
         !mascot ||
+        !nav ||
         !clouds
       )
         return;
@@ -175,7 +179,7 @@ export default function Home() {
       // 完整路径始终存在，clip 窗口从左边缘到吉祥物位置
 
       // 预渲染：HUD 层元素默认隐藏
-      gsap.set([mascot, clouds], { opacity: 0, visibility: "hidden" });
+      gsap.set([mascot, clouds, nav], { opacity: 0, visibility: "hidden" });
 
       // 固定 SVG 的 x quickSetter：与 #master-track 同步平移
       const setSolidX = gsap.quickSetter(solidFixedSvg, "x", "px");
@@ -269,7 +273,7 @@ export default function Home() {
             start: "top top",
             end: () => {
               const hd = masterTrack.scrollWidth - window.innerWidth;
-              return `+=${400 + (hd / window.innerWidth) * 100}%`;
+              return `+=${400 + (hd / window.innerWidth) * 100 + 80}%`;
             },
             pin: true,
             scrub: 0.5,
@@ -404,7 +408,7 @@ export default function Home() {
         .to(guideSvg, { opacity: 1, duration: 0.8, ease: "power1.inOut" }, "fly")
         .to(solidClip, { opacity: 1, duration: 0.3 }, "fly")
         // 吉祥物 + 云朵出场
-        .set([mascot, clouds], { opacity: 1, visibility: "visible" }, "fly")
+        .set([mascot, clouds, nav], { opacity: 1, visibility: "visible" }, "fly")
         // 实线平移 + 吉祥物旋转 + 作品可见性：由 fly tween progress 统一驱动
         .to(
           {},
@@ -472,12 +476,27 @@ export default function Home() {
                   }
                 });
               }
+              // 实线裁剪窗口扩张：About Me 完全占据视口时开始，到滚动尽头刚好填满
+              const aboutEl = document.getElementById("category-about");
+              if (aboutEl && p > 0) {
+                const aboutPx = aboutEl.offsetLeft;
+                const lo = window.innerWidth * 0.1;
+                const fly = Math.max(1, (masterTrack.scrollWidth - window.innerWidth) - lo);
+                // About Me 左边缘到达视口左边缘时对应的 fly progress p
+                const pFillStart = Math.max(0, Math.min(1, (window.innerWidth + aboutPx - lo) / fly));
+                if (p >= pFillStart && pFillStart < 1) {
+                  const fillProgress = (p - pFillStart) / (1 - pFillStart);
+                  solidClip!.style.width = `${(20 + fillProgress * 80).toFixed(1)}vw`;
+                } else {
+                  solidClip!.style.width = "20vw";
+                }
+              }
             },
           },
           "fly"
         )
         // fly 结束后隐藏
-        .set([mascot, solidClip, clouds], { opacity: 0 });
+        .set([mascot, solidClip, clouds, nav], { opacity: 0 });
 
         return newTl;
       }
@@ -511,7 +530,7 @@ export default function Home() {
       const shownBubbles = new Set<string>();
       const bubbleCategories = ["internship", "other"];
       const categoryBubbleMessages: Record<string, string> = {
-        internship: "实习项目还没添加/(ㄒoㄒ)/~~",
+        internship: "JAKA实习最大的收获是理解了复杂系统的分析与设计",
         other: "其他项目还没添加/(ㄒoㄒ)/~~",
       };
     },
@@ -729,6 +748,8 @@ export default function Home() {
         </div>
 
         <FlyingMascot id="flying-mascot" />
+
+        <NavBar />
       </div>
 
       {/* 右下角进度指示器（仅在 Works 区域可见） */}

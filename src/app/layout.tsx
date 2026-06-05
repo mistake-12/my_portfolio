@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import NoiseTexture from "@/components/NoiseTexture";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export const metadata: Metadata = {
   title: "JONY MA. — Creative Designer",
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="zh">
       <body className="font-sans antialiased">
+        <LoadingScreen />
         <NoiseTexture />
         {children}
       </body>
