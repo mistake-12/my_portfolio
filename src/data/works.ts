@@ -182,7 +182,7 @@ export const works: Work[] = [
     image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780666244195_之前.webp",
     slug: "jaka-internship",
     featured: true,
-    description: "机器人独角兽企业，主要负责离线编程软件的功能迭代与体验优化。主导JAKA机械臂虚拟仿真软件V0.1版本的信息架构重构，缩短核心操作路径，降低认知负担。同时分析需求优先级制定开发计划持续优化功能迭代，提高用户体验；推进Cobopi机器人Web端AI助手语音产品方案的设计与落地，制作PRD文档和方案原型",
+    description: "机器人独角兽企业，主要负责JAKA机械臂虚拟仿真软件V0.1版本的功能迭代。核心任务：根据竞品分析调研重构软件信息架构，缩短核心操作路径，降低认知负担。同时分析需求优先级制定开发计划持续优化功能迭代，提高用户体验；推进Cobopi机器人Web端AI助手语音产品方案的设计与落地，制作PRD文档和方案原型",
     tags: ["Product Design", "B端工具", "AI"],
     github: "https://mp.weixin.qq.com/s/3dwoV9TsAneJKModn0wqVA",
     linkLabel: "相关链接",
