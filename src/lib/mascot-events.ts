@@ -11,6 +11,8 @@ export function getRandomQuote(): string {
     .filter(i => !shownIndices.has(i));
   if (remaining.length === 0) {
     shownIndices.clear();
+    // Guard: if still empty after clear (empty quotes array), return fallback
+    if (mascotQuotes.length === 0) return "暂无语录";
     return getRandomQuote();
   }
   const idx = remaining[Math.floor(Math.random() * remaining.length)];

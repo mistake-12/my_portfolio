@@ -43,7 +43,7 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
       const scheduleNext = () => {
         const delay = 15000 + Math.random() * 15000;
         timeoutId = setTimeout(() => {
-          if (mascotEl && mascotEl.style.opacity === "1") {
+          if (mascotEl && mascotEl.style.opacity === "1" && !bubbleShowingRef.current) {
             showMascotMessage(getRandomQuote());
           }
           scheduleNext();
