@@ -18,11 +18,11 @@ export function getRandomQuote(): string {
   return mascotQuotes[idx];
 }
 
-type Listener = (msg: string) => void;
+type Listener = (msg: string, force?: boolean) => void;
 let listeners: Listener[] = [];
 
-export function showMascotMessage(msg: string) {
-  listeners.forEach((fn) => fn(msg));
+export function showMascotMessage(msg: string, force = false) {
+  listeners.forEach((fn) => fn(msg, force));
 }
 
 export function onMascotMessage(fn: Listener) {

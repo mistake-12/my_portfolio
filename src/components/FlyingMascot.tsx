@@ -19,9 +19,11 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
     const bubbleShowingRef = useRef(false);
 
     useEffect(() => {
-      return onMascotMessage((msg) => {
-        // 气泡已在显示中，不打断，让点击和自动弹出互不干扰
-        if (bubbleShowingRef.current) return;
+      return onMascotMessage((msg, force) => {
+        // force（点击）：总是显示，中断当前气泡
+        // 非 force（自动弹出）：气泡已在显示中则跳过
+        if (!force && bubbleShowingRef.current) return;
+        if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
         bubbleShowingRef.current = true;
         setBubbleMsg(msg);
         setBubbleVisible(true);
@@ -53,7 +55,7 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
     }, []);
 
     const handleClick = useCallback(() => {
-      showMascotMessage(getRandomQuote());
+      showMascotMessage(getRandomQuote(), true);
 
       // Trigger bounce animation
       setBouncing(true);
@@ -90,8 +92,10 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
             borderRadius: "10px",
             fontSize: "13px",
             lineHeight: "1.5",
-            whiteSpace: "nowrap",
+            whiteSpace: "normal",
+            wordBreak: "break-word",
             maxWidth: "420px",
+            width: "max-content",
             boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
             animation: "bubble-in 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
