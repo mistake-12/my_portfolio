@@ -14,6 +14,7 @@ import WorksProgress from "@/components/ui/WorksProgress";
 import FlyingMascot from "@/components/FlyingMascot";
 import Clouds from "@/components/Clouds";
 import NavBar from "@/components/NavBar";
+import RagChat from "@/components/RagChat";
 import CategoryIntro from "@/components/CategoryIntro";
 import { works } from "@/data/works";
 import { extendPath } from "@/lib/extendPath";
@@ -749,6 +750,8 @@ export default function Home() {
         <FlyingMascot id="flying-mascot" />
 
         <NavBar />
+
+        <RagChat />
       </div>
 
       {/* 右下角进度指示器（仅在 Works 区域可见） */}

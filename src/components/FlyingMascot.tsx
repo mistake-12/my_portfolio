@@ -2,6 +2,7 @@
 
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { getRandomQuote, onMascotMessage, showMascotMessage } from "@/lib/mascot-events";
+import { openRagChat } from "@/components/RagChat";
 
 interface FlyingMascotProps {
   id?: string;
@@ -76,6 +77,11 @@ const FlyingMascot = forwardRef<HTMLDivElement, FlyingMascotProps>(
         ...style,
       }}
       onClick={handleClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        openRagChat();
+      }}
+      title="右键打开对话"
     >
       {/* 对话气泡 */}
       {bubbleVisible && (
