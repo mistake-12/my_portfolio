@@ -78,7 +78,7 @@ export default function WorkMeta({ work, index }: WorkMetaProps) {
             href={`#work-${work.id}`}
             className="view-link group inline-flex items-center gap-1.5 text-xs font-mono tracking-wider uppercase"
             style={{ color: "#FF4D00" }}
-            onClick={(e) => { e.preventDefault(); showMascotMessage("不好意思二级界面现在还没做捏，潇洒哥正在加急开发~~~"); }}
+            onClick={(e) => { e.preventDefault(); showMascotMessage("不好意思二级界面现在还没做捏，如果想了解的话可以右键小鸟进行问答"); }}
           >
             <span className="leading-none group-hover:translate-x-[-2px] transition-transform duration-300">
               项目详情
