@@ -721,7 +721,22 @@ export default function Home() {
                 ]}
               />
             );
-            // About Me 散落卡片：替换空白引导页
+            // 空白引导页云朵层（保留装饰）
+            elements.push(
+              <CategoryIntro
+                key="cat-blank"
+                id="category-blank"
+                title=""
+                hideLine
+                cloudSlots={[
+                  { left: "5%", top: "12%", scale: 1.2, delay: 0 },
+                  { right: "5%", top: "30%", scale: 0.75, delay: 6 },
+                  { left: "25%", bottom: "20%", scale: 0.9, delay: 4 },
+                  { right: "20%", bottom: "12%", scale: 1.05, delay: 9 },
+                ]}
+              />
+            );
+            // About Me 散落卡片（叠加在云朵层之上）
             aboutCards.forEach((card) => {
               elements.push(
                 <AboutMeCard key={card.id} card={card} />
