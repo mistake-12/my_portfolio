@@ -17,6 +17,8 @@ import NavBar from "@/components/NavBar";
 import RagChat from "@/components/RagChat";
 import CategoryIntro from "@/components/CategoryIntro";
 import { works } from "@/data/works";
+import { aboutCards } from "@/data/about-cards";
+import AboutMeCard from "@/components/AboutCard";
 import { extendPath } from "@/lib/extendPath";
 import { showMascotMessage } from "@/lib/mascot-events";
 
@@ -477,6 +479,19 @@ export default function Home() {
                   }
                 });
               }
+              // About Me 卡片旁白：卡片进入视口左侧时弹出
+              if (shownAboutBubbles.size < aboutCards.length) {
+                aboutCards.forEach((card) => {
+                  if (shownAboutBubbles.has(card.id)) return;
+                  const el = document.getElementById(`about-card-${card.id}`);
+                  if (!el) return;
+                  const rect = el.getBoundingClientRect();
+                  if (rect.left < window.innerWidth * 0.6 && rect.right > 0) {
+                    shownAboutBubbles.add(card.id);
+                    showMascotMessage(card.mascotLine);
+                  }
+                });
+              }
               // 实线裁剪窗口扩张：About Me 完全占据视口时开始，到滚动尽头刚好填满
               const aboutEl = document.getElementById("category-about");
               if (aboutEl && p > 0) {
@@ -528,6 +543,7 @@ export default function Home() {
 
       // 吉祥物对话：经过"实习经历"和"其他项目"引导页时自动弹出
       const shownBubbles = new Set<string>();
+      const shownAboutBubbles = new Set<string>();
       const bubbleCategories = ["internship", "other"];
       const categoryBubbleMessages: Record<string, string> = {
         internship: "JAKA实习最大的收获是理解了复杂系统的分析与设计",
@@ -689,6 +705,9 @@ export default function Home() {
             });
             // 自我介绍引导页（在所有作品之后）
             elements.push(
+              <div key="spacer-before-about" style={{ width: "1000px", height: "100vh", flexShrink: 0 }} />
+            );
+            elements.push(
               <CategoryIntro
                 key="cat-about"
                 id="category-about"
@@ -702,20 +721,15 @@ export default function Home() {
                 ]}
               />
             );
-            // 空白引导页
+            // About Me 散落卡片：替换空白引导页
+            aboutCards.forEach((card) => {
+              elements.push(
+                <AboutMeCard key={card.id} card={card} />
+              );
+            });
+            // spacer before blank end
             elements.push(
-              <CategoryIntro
-                key="cat-blank"
-                id="category-blank"
-                title=""
-                hideLine
-                cloudSlots={[
-                  { left: "5%", top: "12%", scale: 1.2, delay: 0 },
-                  { right: "5%", top: "30%", scale: 0.75, delay: 6 },
-                  { left: "25%", bottom: "20%", scale: 0.9, delay: 4 },
-                  { right: "20%", bottom: "12%", scale: 1.05, delay: 9 },
-                ]}
-              />
+              <div key="spacer-end" style={{ width: "60vw", height: "100vh", flexShrink: 0 }} />
             );
             return elements;
           })()}
