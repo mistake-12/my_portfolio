@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "新建 AboutCard 组件需遵循项目组件模式"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "了解数据文件和组件的组织方式"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "了解小鸟旁白事件系统 (mascot-events)"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "遵循代码质量标准"}

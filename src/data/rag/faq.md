@@ -7,7 +7,7 @@
 根据具体情况可协商，欢迎直接联系我讨论。
 
 ## 联系方式
-可以通过 GitHub (mistake-12) 或个人网站联系我。GitHub: https://github.com/mistake-12
+可以通过 GitHub https://github.com/mistake-12 或个人网站联系我。
 
 ## 工作地点偏好
 对上海、深圳、杭州都持开放态度，具体看机会和团队。

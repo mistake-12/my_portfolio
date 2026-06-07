@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "检查 AboutCard 组件是否符合项目模式"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "检查代码质量、错误处理、TypeScript 类型"}
