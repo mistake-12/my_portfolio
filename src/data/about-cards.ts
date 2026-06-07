@@ -9,6 +9,7 @@ export interface AboutCard {
   tilt: number;
   width: string;
   offsetX?: string;
+  year?: string;
   link?: string;
   linkLabel?: string;
 }
@@ -24,7 +25,8 @@ export const aboutCards: AboutCard[] = [
     mascotLine: "那两年教会我：好的设计自己会站立，不需要多余的装饰。",
     position: "above",
     tilt: -2.5,
-    width: "26vw",
+    width: "39vw",
+    year: "2022-2024",
   },
   {
     id: "ac2",
@@ -36,21 +38,22 @@ export const aboutCards: AboutCard[] = [
     mascotLine: "从造房子到造产品，尺度变了，但那个追问始终没变——它真的让人的生活变好了一点吗？",
     position: "below",
     tilt: 3,
-    width: "26vw",
+    width: "39vw",
     offsetX: "10vw",
+    year: "2024-2027",
   },
   {
     id: "ac3",
     title: "个人能力",
     emoji: "🧠",
     description:
-      "能拆解复杂业务——把模糊的「不好用」翻译成可执行的产品方案，把 4 层信息架构压到 2 层。能从 0 到 1 定义 AI 产品——识别真实场景、界定 MVP 边界、用原型快速验证、推动上线并追踪数据闭环。能全栈独立交付——不依赖外部资源，一个人完成从数据库设计到前端动效的完整产品。",
+      "能拆解复杂业务——把模糊的「不好用」翻译成可执行的产品方案，把4层信息架构压到2层。能从0到1定义AI产品——识别真实场景、界定MVP边界、用原型快速验证、推动上线并追踪数据闭环。能全栈独立交付——不依赖外部资源，一个人完成从数据库设计到前端动效的完整产品。",
     tags: ["业务拆解", "产品定义", "全栈交付"],
     mascotLine: "我的核心能力就一条：拿到一个模糊的问题，给出一套能跑的方案。",
     position: "above",
-    tilt: -3,
-    width: "26vw",
-    offsetX: "20vw",
+    tilt: -3.5,
+    width: "39vw",
+    offsetX: "0vw",
   },
   {
     id: "ac4",
@@ -61,9 +64,9 @@ export const aboutCards: AboutCard[] = [
     tags: ["全栈", "设计+开发", "AI Native"],
     mascotLine: "设计让我发现问题，代码让我解决问题——两者加起来才完整。",
     position: "below",
-    tilt: -2,
-    width: "26vw",
-    offsetX: "30vw",
+    tilt: 2.5,
+    width: "39vw",
+    offsetX: "10vw",
   },
   {
     id: "ac5",
@@ -74,9 +77,9 @@ export const aboutCards: AboutCard[] = [
     tags: ["Open to Work"],
     mascotLine: "如果我的经历让你感兴趣——来找我聊聊吧！",
     position: "above",
-    tilt: 2.5,
-    width: "26vw",
-    offsetX: "40vw",
+    tilt: -2,
+    width: "39vw",
+    offsetX: "10vw",
     link: "https://github.com/mistake-12",
     linkLabel: "GitHub",
   },

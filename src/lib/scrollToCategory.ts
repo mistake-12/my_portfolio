@@ -1,7 +1,13 @@
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 /** 根据 CategoryIntro 元素的实际 DOM 位置（offsetLeft）计算滚动目标 */
 export function scrollToCategory(target: string) {
   const innerW = window.innerWidth;
   const innerH = window.innerHeight;
+
+  // 强制刷新 GSAP ScrollTrigger，确保所有 DOM 测量值是最新的
+  // 修复：首次点击导航时图片未加载完导致 scrollWidth 不准确
+  ScrollTrigger.refresh();
 
   // 直接读取目标引导页 DOM 元素的位置（id="category-{target}"）
   const targetEl = document.getElementById(`category-${target}`);

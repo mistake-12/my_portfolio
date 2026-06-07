@@ -479,7 +479,8 @@ export default function Home() {
                   }
                 });
               }
-              // About Me 卡片旁白：卡片进入视口左侧时弹出
+
+              // 5.5) About Me 卡片旁白：卡片进入视口时弹出，每张只触发一次
               if (shownAboutBubbles.size < aboutCards.length) {
                 aboutCards.forEach((card) => {
                   if (shownAboutBubbles.has(card.id)) return;
@@ -492,6 +493,7 @@ export default function Home() {
                   }
                 });
               }
+
               // 实线裁剪窗口扩张：About Me 完全占据视口时开始，到滚动尽头刚好填满
               const aboutEl = document.getElementById("category-about");
               if (aboutEl && p > 0) {
@@ -515,6 +517,15 @@ export default function Home() {
 
         return newTl;
       }
+
+      // 吉祥物对话：经过"实习经历"、"其他项目"引导页和 About Me 卡片时自动弹出
+      const shownBubbles = new Set<string>();
+      const shownAboutBubbles = new Set<string>();
+      const bubbleCategories = ["internship", "other"];
+      const categoryBubbleMessages: Record<string, string> = {
+        internship: "JAKA实习最大的收获是理解了复杂系统的分析与设计",
+        other: "其他项目还没添加/(ㄒoㄒ)/~~",
+      };
 
       const tl = buildTimeline();
 
@@ -540,15 +551,6 @@ export default function Home() {
           }
         }, 300);
       });
-
-      // 吉祥物对话：经过"实习经历"和"其他项目"引导页时自动弹出
-      const shownBubbles = new Set<string>();
-      const shownAboutBubbles = new Set<string>();
-      const bubbleCategories = ["internship", "other"];
-      const categoryBubbleMessages: Record<string, string> = {
-        internship: "JAKA实习最大的收获是理解了复杂系统的分析与设计",
-        other: "其他项目还没添加/(ㄒoㄒ)/~~",
-      };
     },
     { scope: masterRef }
   );
@@ -705,7 +707,7 @@ export default function Home() {
             });
             // 自我介绍引导页（在所有作品之后）
             elements.push(
-              <div key="spacer-before-about" style={{ width: "1000px", height: "100vh", flexShrink: 0 }} />
+              <div key="spacer-before-about" style={{ width: "400px", height: "100vh", flexShrink: 0 }} />
             );
             elements.push(
               <CategoryIntro
@@ -715,36 +717,75 @@ export default function Home() {
                 textPosition="top-right"
                 cloudSlots={[
                   { left: "8%", top: "25%", scale: 0.85, delay: 0 },
-                  { right: "15%", top: "12%", scale: 1.1, delay: 5 },
                   { left: "20%", bottom: "15%", scale: 0.7, delay: 2 },
                   { right: "8%", bottom: "30%", scale: 0.95, delay: 8 },
                 ]}
               />
             );
-            // 空白引导页云朵层（保留装饰）
+            // 空白引导页（黑色背景）+ About Me 散落卡片
             elements.push(
-              <CategoryIntro
-                key="cat-blank"
-                id="category-blank"
-                title=""
-                hideLine
-                cloudSlots={[
-                  { left: "5%", top: "12%", scale: 1.2, delay: 0 },
-                  { right: "5%", top: "30%", scale: 0.75, delay: 6 },
-                  { left: "25%", bottom: "20%", scale: 0.9, delay: 4 },
-                  { right: "20%", bottom: "12%", scale: 1.05, delay: 9 },
-                ]}
-              />
-            );
-            // About Me 散落卡片（叠加在云朵层之上）
-            aboutCards.forEach((card) => {
-              elements.push(
-                <AboutMeCard key={card.id} card={card} />
-              );
-            });
-            // spacer before blank end
-            elements.push(
-              <div key="spacer-end" style={{ width: "60vw", height: "100vh", flexShrink: 0 }} />
+              <div
+                key="about-section"
+                className="relative flex h-screen flex-shrink-0"
+                style={{ backgroundColor: "#2E2E2E" }}
+              >
+                {/* 云朵装饰层 */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
+                  {[
+                    { left: "5%", top: "12%", scale: 1.2, delay: 0 },
+                    { right: "5%", top: "30%", scale: 0.75, delay: 6 },
+                    { left: "25%", bottom: "20%", scale: 0.9, delay: 4 },
+                    { right: "20%", bottom: "12%", scale: 1.05, delay: 9 },
+                  ].map((c, i) => (
+                    <div
+                      key={`about-cloud-${i}`}
+                      className="absolute"
+                      style={{
+                        left: c.left,
+                        right: c.right,
+                        top: c.top,
+                        bottom: c.bottom,
+                        width: 150 * (c.scale ?? 1),
+                        height: 90 * (c.scale ?? 1),
+                        filter: "drop-shadow(0 8px 8px rgba(0,0,0,0.15))",
+                      }}
+                    >
+                      <svg
+                        viewBox="0 0 150 90"
+                        className="w-full h-full"
+                        style={{
+                          animation: `cloud-drift ${28 + i * 6}s linear infinite`,
+                          animationDelay: `-${c.delay ?? 0}s`,
+                          "--drift-x": `${14 + i * 8}px`,
+                        } as React.CSSProperties}
+                      >
+                        <use href="#cloud-shape" />
+                      </svg>
+                    </div>
+                  ))}
+                </div>
+
+                {/* About Me 散落卡片 */}
+                {aboutCards.map((card) => (
+                  <AboutMeCard key={card.id} card={card} />
+                ))}
+                <div style={{ width: "30vw", height: "100vh", flexShrink: 0 }} />
+                {/* To be continued */}
+                <div
+                  className="absolute"
+                  style={{
+                    right: "8vw",
+                    bottom: "28vh",
+                    color: "#FF4D00",
+                    fontSize: "48px",
+                    fontWeight: 900,
+                    letterSpacing: "0.15em",
+                    fontFamily: "'Space Mono', monospace",
+                  }}
+                >
+                  To be continued
+                </div>
+              </div>
             );
             return elements;
           })()}
