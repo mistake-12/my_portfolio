@@ -3,25 +3,23 @@ import { getLLMResponse } from "@/lib/llm";
 import { getEmbedding } from "@/lib/embedding";
 import { loadIndex, searchChunksWithScores } from "@/lib/rag-index";
 
-// 高频预设回答：匹配到关键词时直接返回，不走 LLM
-const FAQ_ANSWERS: Record<string, string> = {
-  "期望薪资":
-    "薪资我们可以沟通中详细聊，你方便的话可以直接联系我。",
-  "薪资":
-    "薪资我们可以沟通中详细聊，你方便的话可以直接联系我。",
-  "入职时间":
-    "根据具体情况可协商，欢迎直接联系我讨论。",
-  "入职":
-    "根据具体情况可协商，欢迎直接联系我讨论。",
-  "联系方式":
-    "你可以通过 GitHub (mistake-12) 或个人网站联系我。",
-  "联系":
-    "你可以通过 GitHub (mistake-12) 或个人网站联系我。",
-  "工作地点":
-    "对上海、深圳、杭州都持开放态度，具体看机会和团队。",
-  "地点":
-    "对上海、深圳、杭州都持开放态度，具体看机会和团队。",
-};
+// 高频预设回答：仅对短问题做精确匹配，避免长问题中关键词误触发
+const FAQ_PATTERNS: { regex: RegExp; answer: string }[] = [
+  { regex: /^(怎么|如何|怎样)?联系(你|方式)?[？?]?$/, answer: "你可以通过 GitHub (mistake-12) 或个人网站联系我。" },
+  { regex: /^(你(的)?)?联系方式(是)?(什么|啥)?[？?]?$/, answer: "你可以通过 GitHub (mistake-12) 或个人网站联系我。" },
+  { regex: /^(你(的)?)?(期望)?薪资(多少|怎样|如何)[？?]?$/, answer: "薪资我们可以沟通中详细聊，你方便的话可以直接联系我。" },
+  { regex: /^(什么时候|何时|怎么|如何)入职[？?]?$/, answer: "根据具体情况可协商，欢迎直接联系我讨论。" },
+  { regex: /^(你(在|的))?工作地点(在哪|在哪里|是哪里)[？?]?$/, answer: "对上海、深圳、杭州都持开放态度，具体看机会和团队。" },
+];
+
+function matchFAQ(question: string): string | null {
+  for (const { regex, answer } of FAQ_PATTERNS) {
+    if (regex.test(question.trim())) {
+      return answer;
+    }
+  }
+  return null;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,11 +32,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 1. 检查高频预设回答
-    for (const [keyword, answer] of Object.entries(FAQ_ANSWERS)) {
-      if (question.includes(keyword)) {
-        return streamText(answer);
-      }
+    // 1. 精确匹配短问句（如"怎么联系你？"），避免长问题误触发
+    const faqAnswer = matchFAQ(question);
+    if (faqAnswer) {
+      return streamText(faqAnswer);
     }
 
     // 2. RAG 检索：向量语义检索（若 embedding 未正确生成则回退到本地知识库）
