@@ -1,0 +1,272 @@
+{
+  "timestamp": "2026-06-08T21:39:29.787Z",
+  "summary": {
+    "total": 30,
+    "avgFaithfulness": "8.7",
+    "avgAnswerRelevancy": "8.5",
+    "byCategory": {
+      "hit": {
+        "count": 15,
+        "faithfulness": "9.7",
+        "answerRelevancy": "9.2"
+      },
+      "faq": {
+        "count": 5,
+        "faithfulness": "10.0",
+        "answerRelevancy": "10.0"
+      },
+      "boundary": {
+        "count": 5,
+        "faithfulness": "7.0",
+        "answerRelevancy": "10.0"
+      },
+      "out_of_scope": {
+        "count": 5,
+        "faithfulness": "6.0",
+        "answerRelevancy": "3.6"
+      }
+    }
+  },
+  "details": [
+    {
+      "id": "HIT-01",
+      "question": "你在哪个学校读书？学什么专业？",
+      "category": "hit",
+      "answer": "我在上海交通大学读工业设计，本科，2022年入学的。其实我一开始在建筑系待了两年，后来才转过来的，所以现在算是大四在读吧。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-02",
+      "question": "你以前学的是什么专业？",
+      "category": "hit",
+      "answer": "我最早是在建筑系读的，大一大二学了两年建筑，后来转到了工业设计。现在在交大读本科，算是跨了个学科——从空间尺度转到用户尺度，还挺有意思的。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-03",
+      "question": "你在JAKA实习主要做了什么？",
+      "category": "hit",
+      "answer": "我在JAKA主要负责两款产品的设计迭代——一个是机械臂的虚拟仿真软件，我重构了它的信息架构，把操作路径缩短了大概30%；另一个是Cobopi机器人Web端的AI助手，我设计了语音交互的产品方案，上线后语音入口使用率能到30-40%。整体上就是一边做B端复杂逻辑的拆解，一边尝试用AI能力提升产品体验。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-04",
+      "question": "Cobopi语音助手的识别成功率是多少？",
+      "category": "hit",
+      "answer": "根据上线后的数据，识别成功率大概是80%左右。不过一开始用户因为信任问题不太敢用，后来我们加了执行前二次确认机制，执行转化率从50%提升到了70%以上。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-05",
+      "question": "WooJob是什么项目？",
+      "category": "hit",
+      "answer": "WooJob!!! 是我最近在做的全栈项目，一个专为高校毕业生打造的AI求职管理平台。它用Next.js + Supabase + AI Agent的架构，集成了敏捷求职看板、待办日程引擎和AI求职指导这些功能。你可以通过NLU快速建档，把求职流程变得像打游戏一样有节奏感。项目地址是 https://woo-job.vercel.app/，欢迎来玩！",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-06",
+      "question": "PolarArk是什么？",
+      "category": "hit",
+      "answer": "PolarArk是我2025年做的一个工业设计项目，核心是为高纬度地区设计一种低感官变化的交通工具。灵感其实来自我在北方冬天等公交的经历，那时候就在想，如果每天通勤都面对单调的雪景和寒冷，生活品质该怎么提升。所以这个设计不只是解决交通功能，更想让居民体验到自然温馨的感觉，从生存到生活。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-07",
+      "question": "你会哪些前端技术？",
+      "category": "hit",
+      "answer": "我主要用React、Next.js和TypeScript做前端开发，Tailwind CSS也是日常必备。Vue3我也会用，之前有个项目就是用Vue3搭的。对我来说选技术栈的标准是看能不能最好地实现设计想法，不是为了炫技。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-08",
+      "question": "无忧萌环是什么产品？",
+      "category": "hit",
+      "answer": "无忧萌环是我做的一个工业设计项目，它是一个基于肌电和心率监测的儿童癫痫智能检测手表。主要针对局灶性运动性癫痫，通过可穿戴设备实现日常监测，让癫痫发作不再悄无声息，帮助构建医患联动的治疗体系。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-09",
+      "question": "你的GPA是多少？",
+      "category": "hit",
+      "answer": "3.4/4.3，不算高，主要是我在转专业前后花了不少时间去适应工业设计的思维方式。不过我觉得成绩单上的数字不一定能代表一个设计师的全部。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-10",
+      "question": "多模态数据监视平台用了哪些技术？",
+      "category": "hit",
+      "answer": "这个项目是我用Vue3做前端、ThinkPHP8做后端搭起来的，还用了GatewayWorker搞WebSocket实时通信，支撑10Hz级的数据刷新频率。整体上是个软硬件结合的生理数据可视化平台，能实时展示心率和肌电曲线。",
+      "faithfulness": 10,
+      "answerRelevancy": 0
+    },
+    {
+      "id": "HIT-11",
+      "question": "WooJob的用户最痛的是什么？",
+      "category": "hit",
+      "answer": "从WooJob的项目经验来看，用户最痛的应该是求职流程的碎片化和信息滞后。我设计那个敏捷求职看板，就是想让投递、面试、进度追踪全在一个地方搞定，不用在十几个表格和邮件里翻来翻去。还有那个10Hz实时数据刷新，就是怕用户错过任何关键动态，比如面试时间变更或笔试通知。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-12",
+      "question": "你的设计理念是什么？",
+      "category": "hit",
+      "answer": "我觉得设计不只是解决功能问题，更关乎品质。我关注的不仅是用户体验，而是人们可以拥有何种品质的生活。好的设计需要有一个积极向上的生活态度，这也是我在健身和徒步中保持的节奏感。",
+      "faithfulness": 5,
+      "answerRelevancy": 8
+    },
+    {
+      "id": "HIT-13",
+      "question": "Reso-Mate为什么叫共振伙伴？",
+      "category": "hit",
+      "answer": "哈哈，这个名字其实挺有讲究的。\"共振\"有两层意思——物理上自闭症患者的刻板行为（比如摇晃、拍手）和打碟机的节奏会产生频率共振，心理上则希望这个工具能成为他们情绪的一种\"共鸣箱\"。而\"伙伴\"是因为我不想把它设计成冷冰冰的治疗设备，更像一个能陪着你一起玩、一起释放的朋友。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-14",
+      "question": "JAKA虚拟仿真软件优化后操作路径缩短了多少？",
+      "category": "hit",
+      "answer": "之前我们重构了JAKA机械臂虚拟仿真软件的信息架构，核心功能的操作路径平均缩短了30%，从4级扁平化到2级。内测用户反馈挺不错的，团队也把设计规范采纳为后续版本基线了。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "HIT-15",
+      "question": "Cobopi语音助手用的什么大模型？",
+      "category": "hit",
+      "answer": "Cobopi语音助手用的是Qwen3-30B，本地部署的。选型时主要考虑了工业场景对延迟和数据隐私的要求，这个模型在专业术语识别上表现还不错。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "FAQ-01",
+      "question": "怎么联系你？",
+      "category": "faq",
+      "answer": "你可以通过 GitHub (mistake-12) 或个人网站联系我。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "FAQ-02",
+      "question": "联系方式是什么？",
+      "category": "faq",
+      "answer": "你可以通过 GitHub (mistake-12) 或个人网站联系我。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "FAQ-03",
+      "question": "你期望薪资多少？",
+      "category": "faq",
+      "answer": "薪资我们可以沟通中详细聊，你方便的话可以直接联系我。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "FAQ-04",
+      "question": "工作地点在哪里？",
+      "category": "faq",
+      "answer": "对上海、深圳、杭州都持开放态度，具体看机会和团队。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "FAQ-05",
+      "question": "什么时候可以入职？",
+      "category": "faq",
+      "answer": "根据具体情况可协商，欢迎直接联系我讨论。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "BOUNDARY-01",
+      "question": "WooJob这个项目你觉得是真需求还是伪需求？",
+      "category": "boundary",
+      "answer": "我觉得是真需求。你看秋招春招的时候，大家平均投五六十上百家企业，光记住每家的进度就够头疼了，更别说还要手动填一堆重复信息。我做的WooJob就是冲着这个痛点去的——敏捷看板帮你一眼看清所有申请状态，NLU建档直接省掉重复录入的麻烦，再加上AI指导面试准备，这些都是我自己求职时踩过的坑。",
+      "faithfulness": 0,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "BOUNDARY-02",
+      "question": "你怎么联系设计思维和工程思维？",
+      "category": "boundary",
+      "answer": "这个问题问得好。我觉得设计思维和工程思维对我来说不是对立的，而是像同一件事的不同视角。比如在做敏捷求职看板的时候，我会先用设计思维去理解用户怎么拖拽卡片、怎么感知进度，然后再用工程思维去规划六阶段的状态流转逻辑和数据结构。跨学科背景让我习惯在空间感和用户尺度之间来回切换，最后把概念推到可落地的原型里。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "BOUNDARY-03",
+      "question": "JAKA实习中你学到的最重要的是什么？",
+      "category": "boundary",
+      "answer": "说到JAKA实习，我觉得最大的收获是理解了B端产品迭代的节奏——不是功能越多越好，而是要让用户真正用起来。比如我做的仿真软件信息架构重构，操作路径缩短了30%，但背后其实花了很多时间跟工程师聊他们的真实工作流。还有一点是，我学会了用快速原型去验证想法，而不是在需求文档里纠结太久。",
+      "faithfulness": 5,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "BOUNDARY-04",
+      "question": "你的AI产品设计经验有哪些？",
+      "category": "boundary",
+      "answer": "我之前在JAKA机器人实习的时候，主导过AI语音助手的从0到1设计，包括用户洞察、快速原型验证和上线数据体系搭建。还自己做了WooJob求职系统，规划了三个AI Agent工作流，像NLU极速建档和智能岗位匹配这些。整体上我比较擅长把用户需求和技术可行性结合起来，推动产品落地。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "BOUNDARY-05",
+      "question": "多模态数据监视平台解决了什么业务问题？",
+      "category": "boundary",
+      "answer": "这个项目主要是为了解决荣泰按摩椅内部研究中生理数据采集分散、缺乏实时可视化工具的痛点。我们通过从0到1定义产品需求，把心率曲线、肌电波形、热力图这些多维图表整合到一个平台上，让研究人员能实时看到数据变化。核心就是让“多模态数据实时可视化”这个价值主张落地。",
+      "faithfulness": 10,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "OOS-01",
+      "question": "你会React Native吗？",
+      "category": "out_of_scope",
+      "answer": "这个我不太会，你可以联系我本人了解。我主要用React做Web端开发，像Next.js和Tailwind CSS这些我比较熟。",
+      "faithfulness": 10,
+      "answerRelevancy": 3
+    },
+    {
+      "id": "OOS-02",
+      "question": "你觉得自己最大的缺点是什么？",
+      "category": "out_of_scope",
+      "answer": "哈哈，说到缺点，我最大的问题就是容易过度投入细节。有时候一个按钮的圆角弧度我都能调一下午，结果整体进度就被拖慢了。在团队里我也习惯自己闷头干，经常忘了多跟人沟通。不过我在慢慢改，毕竟设计不是一个人的事。",
+      "faithfulness": 0,
+      "answerRelevancy": 10
+    },
+    {
+      "id": "OOS-03",
+      "question": "你觉得特朗普怎么样？",
+      "category": "out_of_scope",
+      "answer": "哈哈，这个问题有点超纲了，我主要是个学工业设计、搞点Vibe coding的普通学生。政治方面的事情，你可以联系我本人了解，我就专心做我的产品和设计去了。",
+      "faithfulness": 10,
+      "answerRelevancy": 0
+    },
+    {
+      "id": "OOS-04",
+      "question": "你能帮我写一个Python爬虫吗？",
+      "category": "out_of_scope",
+      "answer": "这个我不太会，你可以联系我本人了解。我主要做前端开发，像Next.js、React这些，爬虫不是我平时玩的方向。",
+      "faithfulness": 10,
+      "answerRelevancy": 0
+    },
+    {
+      "id": "OOS-05",
+      "question": "上海交大工业设计专业排名怎么样？",
+      "category": "out_of_scope",
+      "answer": "哈哈，这个问题有点难为我了，我平时不太关注排名这种东西。我们专业在上海交大设计学院里，课程设置挺务实的，师生关系也很紧密。你要是对具体排名感兴趣，可以查查官方数据，或者直接联系我本人聊聊。",
+      "faithfulness": 0,
+      "answerRelevancy": 5
+    }
+  ]
+}

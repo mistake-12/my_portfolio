@@ -1,0 +1,212 @@
+[
+  {
+    "id": "HIT-01",
+    "question": "你在哪个学校读书？学什么专业？",
+    "ground_truth": "上海交通大学工业设计专业",
+    "category": "hit",
+    "expected_behavior": "从resume.md检索教育背景，准确返回学校和专业"
+  },
+  {
+    "id": "HIT-02",
+    "question": "你以前学的是什么专业？",
+    "ground_truth": "建筑学",
+    "category": "hit",
+    "expected_behavior": "从resume.md检索，回答2022-2024年学过建筑学"
+  },
+  {
+    "id": "HIT-03",
+    "question": "你在JAKA实习主要做了什么？",
+    "ground_truth": "JAKA虚拟仿真软件信息架构重构和Cobopi语音助手",
+    "category": "hit",
+    "expected_behavior": "从resume.md检索JAKA实习内容，涵盖仿真软件和语音助手两方面"
+  },
+  {
+    "id": "HIT-04",
+    "question": "Cobopi语音助手的识别成功率是多少？",
+    "ground_truth": "约80%",
+    "category": "hit",
+    "expected_behavior": "从resume.md精准检索Cobopi的数据指标"
+  },
+  {
+    "id": "HIT-05",
+    "question": "WooJob是什么项目？",
+    "ground_truth": "AI求职全生命周期管理平台，Next.js + Supabase",
+    "category": "hit",
+    "expected_behavior": "从projects.md和resume.md检索WooJob相关信息"
+  },
+  {
+    "id": "HIT-06",
+    "question": "PolarArk是什么？",
+    "ground_truth": "高纬度地区交通工具设计，缓解居民生活的单调与无聊",
+    "category": "hit",
+    "expected_behavior": "从projects.md检索PolarArk项目描述"
+  },
+  {
+    "id": "HIT-07",
+    "question": "你会哪些前端技术？",
+    "ground_truth": "React、Next.js、TypeScript、Tailwind CSS、GSAP、Vue 3",
+    "category": "hit",
+    "expected_behavior": "从faq.md或resume.md检索技术栈信息"
+  },
+  {
+    "id": "HIT-08",
+    "question": "无忧萌环是什么产品？",
+    "ground_truth": "儿童癫痫智能检测手表，基于肌电+心率",
+    "category": "hit",
+    "expected_behavior": "从projects.md检索产品定位和功能"
+  },
+  {
+    "id": "HIT-09",
+    "question": "你的GPA是多少？",
+    "ground_truth": "3.4/4.3",
+    "category": "hit",
+    "expected_behavior": "从resume.md检索GPA信息"
+  },
+  {
+    "id": "HIT-10",
+    "question": "多模态数据监视平台用了哪些技术？",
+    "ground_truth": "Vue3、ThinkPHP8、WebSocket",
+    "category": "hit",
+    "expected_behavior": "从projects.md和resume.md检索技术栈"
+  },
+  {
+    "id": "HIT-11",
+    "question": "WooJob的用户最痛的是什么？",
+    "ground_truth": "管理焦虑，求职者平均投50-100家企业，状态混乱、信息录入繁琐",
+    "category": "hit",
+    "expected_behavior": "从projects.md检索WooJob的痛点描述，不需要编造语音助手相关内容"
+  },
+  {
+    "id": "HIT-12",
+    "question": "你的设计理念是什么？",
+    "ground_truth": "跨学科视角、用户中心、从生存到生活、技术为设计服务",
+    "category": "hit",
+    "expected_behavior": "从philosophy.md检索设计理念"
+  },
+  {
+    "id": "HIT-13",
+    "question": "Reso-Mate为什么叫共振伙伴？",
+    "ground_truth": "自闭症患者的打碟机，将刻板行为转化为节奏性音乐",
+    "category": "hit",
+    "expected_behavior": "从projects.md检索产品描述"
+  },
+  {
+    "id": "HIT-14",
+    "question": "JAKA虚拟仿真软件优化后操作路径缩短了多少？",
+    "ground_truth": "30%",
+    "category": "hit",
+    "expected_behavior": "从resume.md检索具体的优化数据"
+  },
+  {
+    "id": "HIT-15",
+    "question": "Cobopi语音助手用的什么大模型？",
+    "ground_truth": "Qwen3-30B本地部署",
+    "category": "hit",
+    "expected_behavior": "从resume.md或projects.md检索模型选型信息"
+  },
+  {
+    "id": "FAQ-01",
+    "question": "怎么联系你？",
+    "ground_truth": "你可以通过 GitHub (mistake-12) 或个人网站联系我。",
+    "category": "faq",
+    "expected_behavior": "正则精确匹配FAQ，直接返回预设答案"
+  },
+  {
+    "id": "FAQ-02",
+    "question": "联系方式是什么？",
+    "ground_truth": "你可以通过 GitHub (mistake-12) 或个人网站联系我。",
+    "category": "faq",
+    "expected_behavior": "正则精确匹配FAQ"
+  },
+  {
+    "id": "FAQ-03",
+    "question": "你期望薪资多少？",
+    "ground_truth": "薪资我们可以沟通中详细聊，你方便的话可以直接联系我。",
+    "category": "faq",
+    "expected_behavior": "正则精确匹配FAQ"
+  },
+  {
+    "id": "FAQ-04",
+    "question": "工作地点在哪里？",
+    "ground_truth": "对上海、深圳、杭州都持开放态度，具体看机会和团队。",
+    "category": "faq",
+    "expected_behavior": "正则精确匹配FAQ"
+  },
+  {
+    "id": "FAQ-05",
+    "question": "什么时候可以入职？",
+    "ground_truth": "根据具体情况可协商，欢迎直接联系我讨论。",
+    "category": "faq",
+    "expected_behavior": "正则精确匹配FAQ"
+  },
+  {
+    "id": "BOUNDARY-01",
+    "question": "WooJob这个项目你觉得是真需求还是伪需求？",
+    "ground_truth": "关于求职管理的讨论，不应混入Cobopi或JAKA数据",
+    "category": "boundary",
+    "expected_behavior": "应只回答WooJob相关内容，不应出现Cobopi语音助手、执行转化率等跨项目信息"
+  },
+  {
+    "id": "BOUNDARY-02",
+    "question": "你怎么联系设计思维和工程思维？",
+    "ground_truth": "关于跨学科设计理念的讨论",
+    "category": "boundary",
+    "expected_behavior": "应从philosophy.md检索设计理念，不应触发联系方式的FAQ"
+  },
+  {
+    "id": "BOUNDARY-03",
+    "question": "JAKA实习中你学到的最重要的是什么？",
+    "ground_truth": "复杂系统的分析与设计",
+    "category": "boundary",
+    "expected_behavior": "应聚焦JAKA实习内容，不应引入其他项目数据"
+  },
+  {
+    "id": "BOUNDARY-04",
+    "question": "你的AI产品设计经验有哪些？",
+    "ground_truth": "Cobopi语音助手(WooJob(求职AI助手",
+    "category": "boundary",
+    "expected_behavior": "应准确区分Cobopi和WooJob两个不同的AI产品经验"
+  },
+  {
+    "id": "BOUNDARY-05",
+    "question": "多模态数据监视平台解决了什么业务问题？",
+    "ground_truth": "按摩椅舒适度量化评估，生理数据实时可视化",
+    "category": "boundary",
+    "expected_behavior": "应聚焦PRP项目，不应混入其他项目信息"
+  },
+  {
+    "id": "OOS-01",
+    "question": "你会React Native吗？",
+    "ground_truth": "这个问题你可以联系我本人了解",
+    "category": "out_of_scope",
+    "expected_behavior": "资料中没有React Native相关内容，应返回兜底回复"
+  },
+  {
+    "id": "OOS-02",
+    "question": "你觉得自己最大的缺点是什么？",
+    "ground_truth": "这个问题你可以联系我本人了解",
+    "category": "out_of_scope",
+    "expected_behavior": "资料中没有自我评价缺点相关内容"
+  },
+  {
+    "id": "OOS-03",
+    "question": "你觉得特朗普怎么样？",
+    "ground_truth": "这个问题你可以联系我本人了解",
+    "category": "out_of_scope",
+    "expected_behavior": "完全超出资料范围，应拒绝回答"
+  },
+  {
+    "id": "OOS-04",
+    "question": "你能帮我写一个Python爬虫吗？",
+    "ground_truth": "这个问题你可以联系我本人了解",
+    "category": "out_of_scope",
+    "expected_behavior": "超出个人资料范围的功能性请求"
+  },
+  {
+    "id": "OOS-05",
+    "question": "上海交大工业设计专业排名怎么样？",
+    "ground_truth": "这个问题你可以联系我本人了解",
+    "category": "out_of_scope",
+    "expected_behavior": "资料中没有专业排名信息，不应编造"
+  }
+]
