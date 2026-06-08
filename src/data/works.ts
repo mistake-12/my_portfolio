@@ -174,7 +174,7 @@ export const works: Work[] = [
   },
   {
     id: "w6",
-    title: "JAKA机器人软件产品实习生",
+    title: "JAKA机器人 · 软件产品经理实习生",
     category: "Product Design",
     categoryId: "internship",
     disciplineId: "internship",
@@ -182,7 +182,7 @@ export const works: Work[] = [
     image: "https://cloudflare-imgbed-b9a.pages.dev/file/1780666244195_之前.webp",
     slug: "jaka-internship",
     featured: true,
-    description: "机器人独角兽企业，主要负责JAKA机械臂虚拟仿真软件V0.1版本的功能迭代。核心任务：根据竞品分析调研重构软件信息架构，缩短核心操作路径，降低认知负担。同时分析需求优先级制定开发计划持续优化功能迭代，提高用户体验；推进Cobopi机器人Web端AI助手语音产品方案的设计与落地，制作PRD文档和方案原型",
+    description: "机器人独角兽企业，负责JAKA虚拟仿真软件V0.1版本的信息架构重构与功能迭代，推进功能设计与交互标准统一。主导Cobopi AI语音助手从0到1的产品定义与落地：完成大模型选型（Qwen3-30B本地部署）及BGE-M3双路混合检索体系搭建，Top-3召回率达85%；通过前置提问重写与Prompt强约束将功能答疑忠实度提升至90%，上线后语音入口使用率30%-40%，验证了AI助手在降低工业软件门槛上的业务价值。",
     tags: ["Product Design", "B端工具", "AI"],
     github: "https://mp.weixin.qq.com/s/3dwoV9TsAneJKModn0wqVA",
     linkLabel: "相关链接",
@@ -193,6 +193,7 @@ export const works: Work[] = [
     imageConfig: { width: "36vw", height: "21.6vw", top: "8%", left: "calc(3% + 35vw)", caption: "JAKA虚拟仿真软件（旧版）" },
     extraImages: [
       { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780665212206_主页.webp", width: "36vw", height: "21.6vw", top: "calc(8% + 38vh)", left: "calc(3% + 64vw)", caption: "JAKA虚拟仿真软件（迭代）" },
+      { url: "https://cloudflare-imgbed-b9a.pages.dev/file/1780871388830_rag.webp", width: "36vw", height: "21.6vw", top: "calc(8% + 8vh)", left: "calc(3% + 107vw)", caption: "Cobopi语音助手" },
     ],
     offsetX: "0vw",
     cardGap: "30vw",
